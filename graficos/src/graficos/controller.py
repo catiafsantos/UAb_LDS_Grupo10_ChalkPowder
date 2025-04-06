@@ -22,7 +22,7 @@ class Controller:
         self.__mostra_dlg_importa_dados_evt.add_handler(view.mostra_dlg_carregar_ficheiro)
 
         # Subscrições de eventos da View
-        self.view.importar_ficheiro_click_evt.add_handler(self.user_importa_ficheiro)
+        self.view.importar_ficheiro_click_evt.add_handler(self.user_importar_ficheiro)
         self.view.ficheiro_selecionado_evt.add_handler(self.user_seleciona_ficheiro)
 
     def run(self):
@@ -32,4 +32,4 @@ class Controller:
         self.__mostra_dlg_importa_dados_evt.invoke()
     
     def user_seleciona_ficheiro(self, fullpath: str):
-        self.model.importa_ficheiro(fullpath)
+        # TODO: implementa
