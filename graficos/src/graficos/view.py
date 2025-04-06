@@ -32,7 +32,7 @@ class View:
 
     @property
     def ficheiro_selecionado_evt(self):
-        return self.ficheiro_selecionado_evt
+        return self.__ficheiro_selecionado_evt
 
     def iniciar_interface(self):
         # Inicia a interface gráfica
