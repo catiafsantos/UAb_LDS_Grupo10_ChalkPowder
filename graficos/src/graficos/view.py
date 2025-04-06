@@ -1,5 +1,3 @@
-from typing import Callable
-
 from graficos.eventos import Event
 
 
@@ -23,3 +21,9 @@ class View:
         print("Iniciando a interface gráfica...")
         # Aqui você pode adicionar o código para iniciar a interface gráfica, como criar janelas, botões, etc.
         # Exemplo simples de interface gráfica com Tkinter
+    
+    def mostra_dlg_carregar_ficheiro(self):
+        # TODO: tk mostra tkinter.filedialog para obter um ficheiro do utilizador
+        # Quando a View tiver um ficheiro do utilizador de emitir um evento (ainda não criado) para
+        # informar os interessados (o Controller)
+        print("View recebeu comando para mostra file selection dlg e obter ficheiro de dados do User")

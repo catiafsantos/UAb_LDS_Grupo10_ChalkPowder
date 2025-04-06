@@ -1,10 +1,26 @@
+from graficos.eventos import Event
 from graficos.view import View
 from graficos.model import Model
 
+
+
+class MostraDlgImportaDadosEvt(Event):
+    """Evento emitido pelo Controller para informar a View que deve obter do user 
+    um ficheiro de dados."""
+    def invoke(self) -> None:
+        super().invoke()
+
+
 class Controller:
-    def __init__(self):
+    def __init__(self) -> None:
         self.view = view = View()
         self.model = Model(view)
+
+        # Definição de eventos do Controller
+        self.__mostra_dlg_importa_dados_evt: MostraDlgImportaDadosEvt = MostraDlgImportaDadosEvt()
+
+        # Subscrição de eventos emitidos pelo Controller
+        self.__mostra_dlg_importa_dados_evt.add_handler(view.mostra_dlg_carregar_ficheiro)
 
         # Subscrições de eventos da View
         self.view.importar_ficheiro_click_evt.add_handler(self.user_importa_ficheiro)
@@ -13,7 +29,4 @@ class Controller:
         self.view.iniciar_interface()
 
     def user_importa_ficheiro(self) -> None:
-        # TODO:
-        print("Controller recebeu evento (da View) de que user seleccionou importar ficheiro")
-        # Aqui vamos da instrução à View para mostrar o file selection dialog para o user selecionar um
-        # ficheiro do file system para ser importado
+        self.__mostra_dlg_importa_dados_evt.invoke()
