@@ -12,15 +12,21 @@ class Event:
         self.__handlers = set()
 
     def add_handler(self, handler: Callable[[], None]) -> None:
+        """Método chamado para realizar a subscrição de um evento."""
         self.__handlers.add(handler)
     
     def remove_handler(self, handler: Callable) -> None:
-        """Removes handler by object identity.
+        """Remove um handler/subscritor por object identity.
         
-        If handler is not present, ignores request.
+        Se o handler não está presente, simplesmente retorna None.
         """
         self.__handlers.discard(handler)
     
     def invoke(self, *args: Any, **kwargs: Any) -> None:
+        """Realiza a notificação dos objectos subscritores.
+
+        A classe/componente que implementa o evento chama este método quando a notificação
+        dos subscritores deve ser realizada.
+        """
         for handler in self.__handlers:
             handler(*args, **kwargs)
