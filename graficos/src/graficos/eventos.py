@@ -11,7 +11,7 @@ class Event:
     def __init__(self):
         self.__handlers = set()
 
-    def add_handler(self, handler: Callable[[], None]) -> None:
+    def add_handler(self, handler: Callable) -> None:
         """Método chamado para realizar a subscrição de um evento."""
         self.__handlers.add(handler)
     
