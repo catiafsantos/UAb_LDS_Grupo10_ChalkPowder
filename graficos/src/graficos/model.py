@@ -31,6 +31,7 @@ class EstadoProcessamentoEvt(Event):
 class Model:
     def __init__(self, view) -> None:
         self.view = view
+
         # Indica explicitamente o tipo das estruturas internas para satisfazer Mypy
         self.dados: List[Dict[str, Any]] = []
         self.graficos: List[str] = []
