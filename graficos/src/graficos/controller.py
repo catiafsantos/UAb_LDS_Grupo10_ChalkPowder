@@ -23,6 +23,14 @@ class ImportarFicheiroEvt(Event):
         super().invoke(caminho)
 
 
+class MostraDlgGravaGraficoEvt(Event):
+    """Evento emitido pelo Controller para informar a View que deve mostrar ao User
+    o diálogo de gravação.
+    """
+    def invoke(self) -> None:
+        super().invoke()
+
+
 class Controller:
     def __init__(self) -> None:
         self.view = view = View()
@@ -31,10 +39,12 @@ class Controller:
         # Definição de eventos do Controller
         self.__mostra_dlg_importa_dados_evt: MostraDlgImportaDadosEvt = MostraDlgImportaDadosEvt()
         self.__importar_ficheiro_evt: ImportarFicheiroEvt = ImportarFicheiroEvt()
+        self.__mostra_dlg_grava_grafico_evt: MostraDlgGravaGraficoEvt = MostraDlgGravaGraficoEvt()
 
         # Subscrição de eventos emitidos pelo Controller
         self.__mostra_dlg_importa_dados_evt.add_handler(view.mostra_dlg_carregar_ficheiro)
         self.__importar_ficheiro_evt.add_handler(model.importar_ficheiro)
+        self.__mostra_dlg_grava_grafico_evt.add_handler(view.mostra_dlg_grava_grafico)
 
         # Subscrições de eventos da View
         view.importar_ficheiro_click_evt.add_handler(self.user_importa_ficheiro)
@@ -54,4 +64,6 @@ class Controller:
     
     def user_solicitou_gravacao(self):
         """User selecionou opção de gravar gráfico"""
-        # TODO: Dizer à View para mostrar formulário (diálogo) de gravação
+        # Notifica a View para mostrar formulário (diálogo) de gravação
+        self.__mostra_dlg_grava_grafico_evt.invoke()
+        

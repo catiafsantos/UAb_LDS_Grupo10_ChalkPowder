@@ -62,5 +62,10 @@ class View:
         # informar os interessados (o Controller)
         print("View recebeu comando para mostra file selection dlg e obter ficheiro de dados do User")
     
+    def mostra_dlg_grava_grafico(self):
+        # chamado pelo controller quando é hora de gravar o gráfico
+        # TODO: Penso que a melhor opção é usar um diálogo de tkinter.filedialog
+        print("View recebeu comando para gravar gráfico")
+    
     def notifica_ficheiro_selecionado(self, fullpath: str):
         self.__ficheiro_selecionado_evt.invoke(fullpath)
