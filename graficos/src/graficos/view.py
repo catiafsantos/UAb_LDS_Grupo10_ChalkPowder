@@ -27,6 +27,17 @@ class SolicitaGuardarGraficoEvt(Event):
         super().invoke()
 
 
+class GravaGraficoClickEvt(Event):
+    """Evento emitido pela View quando o User gravar o gráfico num diálogo de 
+    gravação de ficheiros.
+    """
+    def add_handler(self, handler: Callable[[str], None]):
+        super().add_handler(handler)
+
+    def invoke(self, caminho: str) -> None:
+        super().invoke(caminho)
+
+
 class View:
     def __init__(self) -> None:
         # TODO: Cenas da View, Tk...
@@ -42,6 +53,10 @@ class View:
         #  gravar gráfico
         self.__solicita_guardar_grafico_click_evt: SolicitaGuardarGraficoEvt = SolicitaGuardarGraficoEvt()
 
+        # TODO: é preciso fazer invoke() deste evento quando o User selecionar/clicar opção para 
+        #  gravar gráfico
+        self.__grava_grafico_click_evt: GravaGraficoClickEvt = GravaGraficoClickEvt()
+
     @property
     def ficheiro_selecionado_evt(self):
         return self.__ficheiro_selecionado_evt
@@ -49,6 +64,10 @@ class View:
     @property
     def solicita_guardar_grafico_click_evt(self):
         return self.__solicita_guardar_grafico_click_evt
+
+    @property
+    def grava_grafico_click_evt(self):
+        return self.__grava_grafico_click_evt
 
     def ativar_interface(self):
         # Inicia a interface gráfica

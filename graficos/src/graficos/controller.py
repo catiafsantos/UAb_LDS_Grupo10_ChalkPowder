@@ -50,6 +50,7 @@ class Controller:
         view.importar_ficheiro_click_evt.add_handler(self.user_importa_ficheiro)
         view.ficheiro_selecionado_evt.add_handler(self.user_seleciona_ficheiro)
         view.solicita_guardar_grafico_click_evt.add_handler(self.user_solicitou_gravacao)
+        view.grava_grafico_click_evt.add_handler(self.user_grava_grafico)
 
     def run(self):
         self.view.ativar_interface()
@@ -66,4 +67,9 @@ class Controller:
         """User selecionou opção de gravar gráfico"""
         # Notifica a View para mostrar formulário (diálogo) de gravação
         self.__mostra_dlg_grava_grafico_evt.invoke()
+    
+    def user_grava_grafico(self, caminho: str):
+        """User grava gráfico."""
+        # TODO: Notifica Model para gravar gráfico com a fullpath especificada
+        ... 
         
