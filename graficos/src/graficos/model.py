@@ -67,6 +67,10 @@ class Model:
     def importar_ficheiro(self, caminho: str) -> None:
         pass
     
+    # Método para gravar ficheiro
+    def gravar_grafico(self, caminho: str):
+        # Recebe informação do controller
+        pass
 
 	# TODO: Restantes eventos
   

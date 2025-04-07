@@ -31,6 +31,17 @@ class MostraDlgGravaGraficoEvt(Event):
         super().invoke()
 
 
+class GravaGraficoEvt(Event):
+    """Evento emitido pelo Controller para informar o Model que deve gravar o gráfico 
+    e em que localização do filesystem e com que nome gravá-lo.
+    """
+    def add_handler(self, handler: Callable[[str], None]):
+        super().add_handler(handler)
+
+    def invoke(self, caminho: str) -> None:
+        super().invoke(caminho)
+
+
 class Controller:
     def __init__(self) -> None:
         self.view = view = View()
@@ -40,11 +51,13 @@ class Controller:
         self.__mostra_dlg_carregar_ficheiro_evt: MostraDlgCarregarFicheiroEvt = MostraDlgCarregarFicheiroEvt()
         self.__importar_ficheiro_evt: ImportarFicheiroEvt = ImportarFicheiroEvt()
         self.__mostra_dlg_grava_grafico_evt: MostraDlgGravaGraficoEvt = MostraDlgGravaGraficoEvt()
+        self.__grava_grafico_evt : GravaGraficoEvt = GravaGraficoEvt()
 
         # Subscrição de eventos emitidos pelo Controller
         self.__mostra_dlg_carregar_ficheiro_evt.add_handler(view.mostra_dlg_carregar_ficheiro)
         self.__importar_ficheiro_evt.add_handler(model.importar_ficheiro)
         self.__mostra_dlg_grava_grafico_evt.add_handler(view.mostra_dlg_grava_grafico)
+        self.__grava_grafico_evt.add_handler(model.gravar_grafico)
 
         # Subscrições de eventos da View
         view.importar_ficheiro_click_evt.add_handler(self.user_importa_ficheiro)
