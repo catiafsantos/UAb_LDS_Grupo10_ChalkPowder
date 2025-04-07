@@ -83,6 +83,6 @@ class Controller:
     
     def user_grava_grafico(self, caminho: str):
         """User grava gráfico."""
-        # TODO: Notifica Model para gravar gráfico com a fullpath especificada
-        ... 
+        # Notifica Model para gravar gráfico com a fullpath especificada
+        self.__grava_grafico_evt.invoke(caminho)
         
