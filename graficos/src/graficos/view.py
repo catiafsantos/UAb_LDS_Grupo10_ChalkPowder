@@ -9,7 +9,7 @@ class ImportarFicheiroClickEvt(Event):
         super().invoke()
 
 
-class FicheiroSelecionadoEvt(Event):
+class FicheiroSelecionadoClickEvt(Event):
     """Evento emitido pela View quando o User seleccionou um ficheiro do file system.
 
     Quando invocado este evento passa a fullpath do ficheiro seleccionado para o subscritor.
@@ -19,7 +19,7 @@ class FicheiroSelecionadoEvt(Event):
         return super().add_handler(handler)
 
 
-class SolicitaGuardarGraficoEvt(Event):
+class SolicitaGuardarGraficoClickEvt(Event):
     """Evento emitido pela View quando o User seleciona opção de gravar
     "Guardar Gráfico"
     """
@@ -47,11 +47,11 @@ class View:
         # TODO: temos que fazer invoke() deste evento self.importar_ficheiro_click_evt quando o User
         # selecionar importar ficheiro no UI
 
-        self.__ficheiro_selecionado_evt: FicheiroSelecionadoEvt = FicheiroSelecionadoEvt()
+        self.__ficheiro_selecionado_evt: FicheiroSelecionadoClickEvt = FicheiroSelecionadoClickEvt()
 
         # TODO: é preciso fazer invoke() deste evento quando o User selecionar/clicar opção para 
         #  gravar gráfico
-        self.__solicita_guardar_grafico_click_evt: SolicitaGuardarGraficoEvt = SolicitaGuardarGraficoEvt()
+        self.__solicita_guardar_grafico_click_evt: SolicitaGuardarGraficoClickEvt = SolicitaGuardarGraficoClickEvt()
 
         # TODO: é preciso fazer invoke() deste evento quando o User selecionar/clicar opção para 
         #  gravar gráfico
