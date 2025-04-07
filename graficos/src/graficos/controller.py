@@ -29,6 +29,7 @@ class Controller:
         self.view.ativar_interface()
 
     def user_importa_ficheiro(self) -> None:
+        """User selecionou importar ficheiro"""
         self.__mostra_dlg_importa_dados_evt.invoke()
     
     def user_seleciona_ficheiro(self, fullpath: str):
