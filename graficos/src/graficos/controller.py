@@ -5,7 +5,7 @@ from graficos.view import View
 from graficos.model import Model
 
 
-class MostraDlgImportaDadosEvt(Event):
+class MostraDlgCarregarFicheiroEvt(Event):
     """Evento emitido pelo Controller para informar a View que deve obter do user 
     um ficheiro de dados."""
     def invoke(self) -> None:
@@ -37,12 +37,12 @@ class Controller:
         self.model = model = Model(view)
 
         # Definição de eventos do Controller
-        self.__mostra_dlg_importa_dados_evt: MostraDlgImportaDadosEvt = MostraDlgImportaDadosEvt()
+        self.__mostra_dlg_carregar_ficheiro_evt: MostraDlgCarregarFicheiroEvt = MostraDlgCarregarFicheiroEvt()
         self.__importar_ficheiro_evt: ImportarFicheiroEvt = ImportarFicheiroEvt()
         self.__mostra_dlg_grava_grafico_evt: MostraDlgGravaGraficoEvt = MostraDlgGravaGraficoEvt()
 
         # Subscrição de eventos emitidos pelo Controller
-        self.__mostra_dlg_importa_dados_evt.add_handler(view.mostra_dlg_carregar_ficheiro)
+        self.__mostra_dlg_carregar_ficheiro_evt.add_handler(view.mostra_dlg_carregar_ficheiro)
         self.__importar_ficheiro_evt.add_handler(model.importar_ficheiro)
         self.__mostra_dlg_grava_grafico_evt.add_handler(view.mostra_dlg_grava_grafico)
 
@@ -56,7 +56,7 @@ class Controller:
 
     def user_importa_ficheiro(self) -> None:
         """User selecionou importar ficheiro"""
-        self.__mostra_dlg_importa_dados_evt.invoke()
+        self.__mostra_dlg_carregar_ficheiro_evt.invoke()
 
     def user_seleciona_ficheiro(self, caminho: str):
         """User selecionou um ficheiro para importar."""
