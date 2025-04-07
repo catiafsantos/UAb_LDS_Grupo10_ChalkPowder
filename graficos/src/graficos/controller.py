@@ -49,7 +49,7 @@ class Controller:
         # Subscrições de eventos da View
         view.importar_ficheiro_click_evt.add_handler(self.user_importa_ficheiro)
         view.ficheiro_selecionado_evt.add_handler(self.user_seleciona_ficheiro)
-        view.guardar_grafico_click_evt.add_handler(self.user_solicitou_gravacao)
+        view.solicita_guardar_grafico_click_evt.add_handler(self.user_solicitou_gravacao)
 
     def run(self):
         self.view.ativar_interface()
