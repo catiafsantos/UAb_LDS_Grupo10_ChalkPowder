@@ -62,6 +62,7 @@ class Controller:
         # Subscrições de eventos da View
         view.importar_ficheiro_click_evt.add_handler(self.user_importa_ficheiro)
         view.ficheiro_selecionado_evt.add_handler(self.user_seleciona_ficheiro)
+        view.grafico_selecionado_click_evt.add_handler(self.user_selecionou_grafico)
         view.solicita_guardar_grafico_click_evt.add_handler(self.user_solicitou_gravacao)
         view.grava_grafico_click_evt.add_handler(self.user_grava_grafico)
 
@@ -75,6 +76,11 @@ class Controller:
     def user_seleciona_ficheiro(self, caminho: str):
         """User selecionou um ficheiro para importar."""
         self.__importar_ficheiro_evt.invoke(caminho)
+    
+    def user_selecionou_grafico(self, grafico_selecionado: str):
+        """User selecionou tipo de gráfico."""
+        # TODO: ...
+        ...
     
     def user_solicitou_gravacao(self):
         """User selecionou opção de gravar gráfico"""

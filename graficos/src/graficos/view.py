@@ -19,6 +19,16 @@ class FicheiroSelecionadoClickEvt(Event):
         return super().add_handler(handler)
 
 
+class GraficoSelecionadoClickEvt(Event):
+    """Evento emitido pela View quando o User escolhe um tipo de gráfico.
+    """
+    def add_handler(self, handler: Callable[[str], None]):
+        super().add_handler(handler)
+
+    def invoke(self, grafico_selecionado: str):
+        super().invoke(grafico_selecionado)
+
+
 class SolicitaGuardarGraficoClickEvt(Event):
     """Evento emitido pela View quando o User seleciona opção de gravar
     "Guardar Gráfico"
@@ -49,6 +59,10 @@ class View:
 
         self.__ficheiro_selecionado_evt: FicheiroSelecionadoClickEvt = FicheiroSelecionadoClickEvt()
 
+        #  TODO: é preciso fazer invoke() deste evento quando o User selecionar/clicar opção para 
+        #  escolher o gráfico
+        self.__grafico_selecionado_click_evt : GraficoSelecionadoClickEvt = GraficoSelecionadoClickEvt()
+
         # TODO: é preciso fazer invoke() deste evento quando o User selecionar/clicar opção para 
         #  gravar gráfico
         self.__solicita_guardar_grafico_click_evt: SolicitaGuardarGraficoClickEvt = SolicitaGuardarGraficoClickEvt()
@@ -60,6 +74,10 @@ class View:
     @property
     def ficheiro_selecionado_evt(self):
         return self.__ficheiro_selecionado_evt
+    
+    @property
+    def grafico_selecionado_click_evt(self):
+        return self.__grafico_selecionado_click_evt
     
     @property
     def solicita_guardar_grafico_click_evt(self):
