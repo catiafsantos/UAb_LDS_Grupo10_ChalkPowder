@@ -37,8 +37,9 @@ class Controller:
         self.__importar_ficheiro_evt.add_handler(model.importar_ficheiro)
 
         # Subscrições de eventos da View
-        self.view.importar_ficheiro_click_evt.add_handler(self.user_importa_ficheiro)
-        self.view.ficheiro_selecionado_evt.add_handler(self.user_seleciona_ficheiro)
+        view.importar_ficheiro_click_evt.add_handler(self.user_importa_ficheiro)
+        view.ficheiro_selecionado_evt.add_handler(self.user_seleciona_ficheiro)
+        view.guardar_grafico_click_evt.add_handler(self.user_solicitou_gravacao)
 
     def run(self):
         self.view.ativar_interface()
@@ -50,3 +51,7 @@ class Controller:
     def user_seleciona_ficheiro(self, caminho: str):
         """User selecionou um ficheiro para importar."""
         self.__importar_ficheiro_evt.invoke(caminho)
+    
+    def user_solicitou_gravacao(self):
+        """User selecionou opção de gravar gráfico"""
+        # TODO: Dizer à View para mostrar formulário (diálogo) de gravação
