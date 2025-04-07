@@ -26,7 +26,7 @@ class Controller:
         self.view.ficheiro_selecionado_evt.add_handler(self.user_seleciona_ficheiro)
 
     def run(self):
-        self.view.iniciar_interface()
+        self.view.ativar_interface()
 
     def user_importa_ficheiro(self) -> None:
         self.__mostra_dlg_importa_dados_evt.invoke()

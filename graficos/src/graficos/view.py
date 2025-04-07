@@ -34,7 +34,7 @@ class View:
     def ficheiro_selecionado_evt(self):
         return self.__ficheiro_selecionado_evt
 
-    def iniciar_interface(self):
+    def ativar_interface(self):
         # Inicia a interface gráfica
         print("Iniciando a interface gráfica...")
         # Aqui você pode adicionar o código para iniciar a interface gráfica, como criar janelas, botões, etc.
