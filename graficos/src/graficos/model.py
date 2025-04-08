@@ -1,76 +1,194 @@
-from typing import List, Dict, Any
+from typing import List, Dict, Any, Callable
 from graficos.eventos import Event
 
-# Definição de eventos específicos para o model
-class FicheiroInvalidoEvt(Event):
-    ''' Evento emitido quando o ficheiro é inválido.     
-        Por exemplo, quando o ficheiro não existe ou não é um ficheiro de dados válido.
-    '''
-    #def add_handler(self, handler: Callable[[str], None]) -> None:
-        #super().add_handler(handler) 
+# =============================================================================
+# Eventos Utilizados pelo Model
+# =============================================================================
 
-    def invoke(self, mensagem: str) -> None: 
+class FicheiroInvalidoEvt(Event):
+    """
+    Evento emitido quando ocorre algum erro relacionado com o ficheiro.
+    Os handlers subscritos recebem uma mensagem (string) a explicar o erro.
+    """
+    def add_handler(self, handler: Callable[[str], None]) -> None:
+        super().add_handler(handler)
+    def invoke(self, mensagem: str) -> None:
         super().invoke(mensagem)
 
 class EstadoProcessamentoEvt(Event):
-    ''' Evento emitido quando o estado do processamento muda. 
-        Por exemplo, quando o processamento de um ficheiro é iniciado ou terminado.
-        Ou quando o processamento de um ficheiro falha.
-    '''
-
-    #def add_handler(self, handler: Callable[[str], None]) -> None:
-        #super().add_handler(handler) 
-
+    """
+    Evento para notificar alterações no estado do processamento.
+    Ex.: "Início da importação", "Processamento concluído", "Gravação concluída", etc.
+    """
+    def add_handler(self, handler: Callable[[str], None]) -> None:
+        super().add_handler(handler)
     def invoke(self, estado: str) -> None:
         super().invoke(estado)
 
-# TODO: Restantes eventos de notificação
+class ImportacaoConcluidaEvt(Event):
+    """
+    Evento para notificar que a importação foi concluída com sucesso.
+    (Sem argumentos)
+    """
+    def add_handler(self, handler: Callable[[], None]) -> None:
+        super().add_handler(handler)
+    def invoke(self) -> None:
+        super().invoke()
 
+class GravacaoConcluidaEvt(Event):
+    """
+    Evento para notificar que a gravação do gráfico foi concluída com sucesso.
+    (Sem argumentos)
+    """
+    def add_handler(self, handler: Callable[[], None]) -> None:
+        super().add_handler(handler)
+    def invoke(self) -> None:
+        super().invoke()
 
+class GraficosDisponiveisEvt(Event):
+    """
+    Evento para notificar que existem gráficos disponíveis após a importação.
+    Os handlers recebem a lista de gráficos.
+    """
+    def add_handler(self, handler: Callable[[List[str]], None]) -> None:
+        super().add_handler(handler)
+    def invoke(self, lista_graficos: List[str]) -> None:
+        super().invoke(lista_graficos)
+
+# --- Novos eventos para diferenciar os tipos de falha ---
+class FalhaImportacaoEvt(Event):
+    """
+    Evento para notificar que ocorreu uma falha de importação (dados/ficheiro).
+    Os handlers recebem uma mensagem específica de falha de importação.
+    """
+    def add_handler(self, handler: Callable[[str], None]) -> None:
+        super().add_handler(handler)
+    def invoke(self, mensagem: str) -> None:
+        super().invoke(mensagem)
+
+class FalhaGravacaoEvt(Event):
+    """
+    Evento para notificar que ocorreu uma falha na gravação do gráfico.
+    Os handlers recebem uma mensagem específica de falha na gravação.
+    """
+    def add_handler(self, handler: Callable[[str], None]) -> None:
+        super().add_handler(handler)
+    def invoke(self, mensagem: str) -> None:
+        super().invoke(mensagem)
+
+# =============================================================================
 # Classe Model
+# =============================================================================
+
 class Model:
-    def __init__(self, view) -> None:
+    def __init__(self, view) -> None:  
         self.view = view
+        self.dados: List[Dict[str, Any]] = []   # Armazena os dados importados
+        self.graficos: List[str] = []             # Lista de gráficos gerados
 
-        # Indica explicitamente o tipo das estruturas internas para satisfazer Mypy
-        self.dados: List[Dict[str, Any]] = []
-        self.graficos: List[str] = []
-
-        # Definição dos eventos com type hints
-        self.__ficheiro_invalido_evt: FicheiroInvalidoEvt = FicheiroInvalidoEvt()
+        # Eventos de sucesso e estado
         self.__estado_processamento_evt: EstadoProcessamentoEvt = EstadoProcessamentoEvt()
-		# TODO: Restantes eventos
+        self.__importacao_concluida_evt: ImportacaoConcluidaEvt = ImportacaoConcluidaEvt()
+        self.__gravacao_concluida_evt: GravacaoConcluidaEvt = GravacaoConcluidaEvt()
+        self.__graficos_disponiveis_evt: GraficosDisponiveisEvt = GraficosDisponiveisEvt()
 
-    # Propriedades para acesso aos eventos, facilitando a ligação entre o model e a view
-    @property
-    def ficheiro_invalido_evt(self) -> FicheiroInvalidoEvt:
-        return self.__ficheiro_invalido_evt
+        # Eventos para falhas diferenciadas
+        self.__falha_importacao_evt: FalhaImportacaoEvt = FalhaImportacaoEvt()
+        self.__falha_gravacao_evt: FalhaGravacaoEvt = FalhaGravacaoEvt()
+
+        # Evento genérico de ficheiro inválido:
+        self.__ficheiro_invalido_evt: FicheiroInvalidoEvt = FicheiroInvalidoEvt()
+
+    # =========================================================================
+    # Propriedades para acesso aos eventos
+    # =========================================================================
 
     @property
     def estado_processamento_evt(self) -> EstadoProcessamentoEvt:
         return self.__estado_processamento_evt
 
-	# TODO: Restantes eventos
+    @property
+    def importacao_concluida_evt(self) -> ImportacaoConcluidaEvt:
+        return self.__importacao_concluida_evt
 
-    # Método para notificar interessados que o ficheiro é inválido
-    def mensagem_ficheiro_invalido(self) -> None:
-        """Notifica interessados que houve um erro na importação do ficheiro."""
-        # mensagem = "Erro: Ficheiro inválido."
-        self.__ficheiro_invalido_evt.invoke("Erro: Ficheiro inválido.")
+    @property
+    def gravacao_concluida_evt(self) -> GravacaoConcluidaEvt:
+        return self.__gravacao_concluida_evt
 
-    def mensagem_estado_processamento(self) -> None:
-        """Notifica interessados que o estado do processamento mudou."""
-        # estado = "Estado do processamento atualizado."
-        self.__estado_processamento_evt.invoke("Estado do processamento atualizado.")
+    @property
+    def graficos_disponiveis_evt(self) -> GraficosDisponiveisEvt:
+        return self.__graficos_disponiveis_evt
 
-    # Método para importar ficheiro
+    @property
+    def falha_importacao_evt(self) -> FalhaImportacaoEvt:
+        return self.__falha_importacao_evt
+
+    @property
+    def falha_gravacao_evt(self) -> FalhaGravacaoEvt:
+        return self.__falha_gravacao_evt
+
+    @property
+    def ficheiro_invalido_evt(self) -> FicheiroInvalidoEvt:
+        return self.__ficheiro_invalido_evt
+
+    # =========================================================================
+    # Métodos de Notificação (Invokes encapsulados)
+    # =========================================================================
+
+    def mensagem_estado_processamento(self, estado: str) -> None:
+        """
+        Notifica os interessados de uma alteração no estado do processamento.
+        (Ex.: "Início da importação", "Processamento concluído", etc.)
+        """
+        self.__estado_processamento_evt.invoke(estado)
+
+    def mensagem_importacao_concluida(self) -> None:
+        """
+        Notifica que a importação foi concluída com sucesso.
+        """
+        self.__importacao_concluida_evt.invoke()
+
+    def mensagem_gravacao_concluida(self) -> None:
+        """
+        Notifica que a gravação do gráfico foi concluída com sucesso.
+        """
+        self.__gravacao_concluida_evt.invoke()
+
+    def notifica_graficos_disponiveis(self) -> None:
+        """
+        Notifica que existem gráficos disponíveis (por exemplo, "Barras", "Linhas", "Pizza").
+        """
+        self.__graficos_disponiveis_evt.invoke(self.graficos)
+
+    # --- Novos métodos de notificação de falhas diferenciadas ---
+    def mensagem_falha_importacao(self, mensagem: str = "Falha de importação do ficheiro.") -> None:
+        """
+        Notifica que ocorreu uma falha específica na importação.
+        """
+        self.__falha_importacao_evt.invoke(mensagem)
+
+    def mensagem_falha_gravacao(self, mensagem: str = "Falha na gravação do gráfico.") -> None:
+        """
+        Notifica que ocorreu uma falha específica na gravação.
+        """
+        self.__falha_gravacao_evt.invoke(mensagem)
+
+    # =========================================================================
+    # Métodos de dados (Importação e Gravação)
+    # =========================================================================
+
     def importar_ficheiro(self, caminho: str) -> None:
+        """
+        Importa e processa o ficheiro de dados.        
+        :param caminho: Caminho do ficheiro a importar.
+        """
         pass
-    
-    # Método para gravar ficheiro
-    def gravar_grafico(self, caminho: str):
-        # Recebe informação do controller
-        pass
+        # TODO: Implementar a lógica de importação do ficheiro.
 
-	# TODO: Restantes eventos
-  
+    def gravar_grafico(self, caminho: str) -> None:
+        """
+        Grava o gráfico num ficheiro.        
+        :param caminho: Caminho onde o gráfico será gravado.
+        """
+        pass
+        # TODO: Implementar a lógica de gravação do gráfico.
