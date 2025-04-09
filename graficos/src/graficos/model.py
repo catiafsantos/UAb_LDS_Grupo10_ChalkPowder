@@ -35,7 +35,7 @@ class ImportacaoConcluidaEvt(Event):
     def invoke(self) -> None:
         super().invoke()
 
-class GravacaoConcluidaEvt(Event):
+class GraficoGravadoEvt(Event):
     """
     Evento para notificar que a gravação do gráfico foi concluída com sucesso.
     (Sem argumentos)
@@ -45,7 +45,7 @@ class GravacaoConcluidaEvt(Event):
     def invoke(self) -> None:
         super().invoke()
 
-class GraficosDisponiveisEvt(Event):
+class GraficoDisponivelEvt(Event):
     """
     Evento para notificar que existem gráficos disponíveis após a importação.
     Os handlers recebem a lista de gráficos.
@@ -89,8 +89,8 @@ class Model:
         # Eventos de sucesso e estado
         self.__estado_processamento_evt: EstadoProcessamentoEvt = EstadoProcessamentoEvt()
         self.__importacao_concluida_evt: ImportacaoConcluidaEvt = ImportacaoConcluidaEvt()
-        self.__gravacao_concluida_evt: GravacaoConcluidaEvt = GravacaoConcluidaEvt()
-        self.__graficos_disponiveis_evt: GraficosDisponiveisEvt = GraficosDisponiveisEvt()
+        self.__grafico_gravado_evt: GraficoGravadoEvt = GraficoGravadoEvt()
+        self.__grafico_disponivel_evt: GraficoDisponivelEvt = GraficoDisponivelEvt()
 
         # Eventos para falhas diferenciadas
         self.__falha_importacao_evt: FalhaImportacaoEvt = FalhaImportacaoEvt()
@@ -112,12 +112,12 @@ class Model:
         return self.__importacao_concluida_evt
 
     @property
-    def gravacao_concluida_evt(self) -> GravacaoConcluidaEvt:
-        return self.__gravacao_concluida_evt
+    def grafico_gravado_evt(self) -> GraficoGravadoEvt:
+        return self.__grafico_gravado_evt
 
     @property
-    def graficos_disponiveis_evt(self) -> GraficosDisponiveisEvt:
-        return self.__graficos_disponiveis_evt
+    def grafico_disponivel_evt(self) -> GraficoDisponivelEvt:
+        return self.__grafico_disponivel_evt
 
     @property
     def falha_importacao_evt(self) -> FalhaImportacaoEvt:
@@ -148,17 +148,17 @@ class Model:
         """
         self.__importacao_concluida_evt.invoke()
 
-    def mensagem_gravacao_concluida(self) -> None:
+    def mensagem_grafico_gravado(self) -> None:
         """
         Notifica que a gravação do gráfico foi concluída com sucesso.
         """
-        self.__gravacao_concluida_evt.invoke()
+        self.__grafico_gravado_evt.invoke()
 
     def notifica_graficos_disponiveis(self) -> None:
         """
         Notifica que existem gráficos disponíveis (por exemplo, "Barras", "Linhas", "Pizza").
         """
-        self.__graficos_disponiveis_evt.invoke(self.graficos)
+        self.__grafico_disponivel_evt.invoke(self.graficos)
 
     # --- Novos métodos de notificação de falhas diferenciadas ---
     def mensagem_falha_importacao(self, mensagem: str = "Falha de importação do ficheiro.") -> None:
