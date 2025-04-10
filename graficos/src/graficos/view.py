@@ -126,6 +126,10 @@ class View:
         print("Interface gráfica pronta.")
         self.mainloop()
 
+    def __on_importar_ficheiro_click(self):
+        # Método chamado quando o botão "Importar Ficheiro" é clicado
+        self.importar_ficheiro_click_evt.invoke()
+        
     def mostra_dlg_carregar_ficheiro(self):
         # TODO: tk mostra tkinter.filedialog para obter um ficheiro do utilizador
         # Quando a View tiver um ficheiro do utilizador de emitir um evento (ainda não criado) para
