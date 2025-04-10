@@ -52,6 +52,7 @@ class GravaGraficoClickEvt(Event):
 
 class View:
     def __init__(self) -> None:
+        super().__init__()
         # Eventos expostos pela view
         self.importar_ficheiro_click_evt: ImportarFicheiroClickEvt = ImportarFicheiroClickEvt()
         self.__ficheiro_selecionado_evt: FicheiroSelecionadoClickEvt = FicheiroSelecionadoClickEvt()
