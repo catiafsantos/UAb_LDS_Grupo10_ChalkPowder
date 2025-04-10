@@ -127,19 +127,30 @@ class View:
         self.mainloop()
 
     def __on_importar_ficheiro_click(self):
-        # Método chamado quando o botão "Importar Ficheiro" é clicado
+        # Método que informa o Controller que o utilizador clicou no botão "Importar Ficheiro"
         self.importar_ficheiro_click_evt.invoke()
         
     def mostra_dlg_carregar_ficheiro(self):
-        # TODO: tk mostra tkinter.filedialog para obter um ficheiro do utilizador
-        # Quando a View tiver um ficheiro do utilizador de emitir um evento (ainda não criado) para
-        # informar os interessados (o Controller)
+        # Método que mostra o diálogo para carregar um ficheiro 
         print("View recebeu comando para mostra file selection dlg e obter ficheiro de dados do User")
-    
+        path = filedialog.askopenfilename(
+        title="Selecionar ficheiro CSV",
+        filetypes=[("Ficheiros CSV", "*.csv"), ("Todos os ficheiros", "*.*")]
+        )
+
+        if path:
+            print(f"Ficheiro selecionado: {path}")
+            self.notifica_ficheiro_selecionado(path)
+        else:
+            print("Nenhum ficheiro foi selecionado.")
+
+    # Método que informa o Controller que o utilizador selecionou um ficheiro com determinado caminho
+    def notifica_ficheiro_selecionado(self, fullpath: str):
+        self.__ficheiro_selecionado_evt.invoke(fullpath)
+        
     def mostra_dlg_grava_grafico(self):
         # chamado pelo controller quando é hora de gravar o gráfico
         # TODO: Penso que a melhor opção é usar um diálogo de tkinter.filedialog
         print("View recebeu comando para gravar gráfico")
     
-    def notifica_ficheiro_selecionado(self, fullpath: str):
-        self.__ficheiro_selecionado_evt.invoke(fullpath)
+    
