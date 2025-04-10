@@ -50,7 +50,7 @@ class GravaGraficoClickEvt(Event):
         super().invoke(caminho)
 
 
-class View:
+class View(tk.Tk):
     def __init__(self) -> None:
         super().__init__()
         # Eventos expostos pela view
