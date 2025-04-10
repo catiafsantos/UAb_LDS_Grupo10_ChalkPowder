@@ -1,8 +1,10 @@
 from typing import Callable
-
 from graficos.eventos import Event
+import tkinter as tk
+from tkinter import filedialog
 
 
+# Eventos da View
 class ImportarFicheiroClickEvt(Event):
     """Evento emitido pela View quando o User selecciona importar ficheiro."""
     def invoke(self) -> None:
@@ -50,13 +52,8 @@ class GravaGraficoClickEvt(Event):
 
 class View:
     def __init__(self) -> None:
-        # TODO: Cenas da View, Tk...
-
         # Eventos expostos pela view
         self.importar_ficheiro_click_evt: ImportarFicheiroClickEvt = ImportarFicheiroClickEvt()
-        # TODO: temos que fazer invoke() deste evento self.importar_ficheiro_click_evt quando o User
-        # selecionar importar ficheiro no UI
-
         self.__ficheiro_selecionado_evt: FicheiroSelecionadoClickEvt = FicheiroSelecionadoClickEvt()
 
         #  TODO: é preciso fazer invoke() deste evento quando o User selecionar/clicar opção para 
@@ -71,6 +68,7 @@ class View:
         #  gravar gráfico
         self.__grava_grafico_click_evt: GravaGraficoClickEvt = GravaGraficoClickEvt()
 
+    # Propriedades para acesso a eventos
     @property
     def ficheiro_selecionado_evt(self):
         return self.__ficheiro_selecionado_evt
@@ -89,9 +87,44 @@ class View:
 
     def ativar_interface(self):
         # Inicia a interface gráfica
-        print("Iniciando a interface gráfica...")
-        # Aqui você pode adicionar o código para iniciar a interface gráfica, como criar janelas, botões, etc.
-        # Exemplo simples de interface gráfica com Tkinter
+        print("Iniciando a interface gráfica...")    # No futuro deve ser removido
+        self.title("Conversor .csv para Gráfico")
+        self.geometry("500x300")      # Tamanho da janela
+        self.configure(bg="#1E3A5F")  # Fundo azul escuro
+
+        self.frames = {}
+
+        # Frame externo com fundo azul escuro
+        outer_frame = tk.Frame(self, bg="#1E3A5F")
+        outer_frame.pack(expand=True, fill=tk.BOTH)
+
+        # Frame interno com fundo branco
+        container = tk.Frame(outer_frame, bg="White", bd=1, relief="solid")
+        container.place(relx=0.5, rely=0.5, anchor="center", width=485, height=285)
+
+        # Permitir expansão dos frames internos
+        container.grid_rowconfigure(0, weight=1)
+        container.grid_columnconfigure(0, weight=1)
+    
+        # Botão "Importar Ficheiro"
+        btn_importar = tk.Button(
+            container,
+            text="Importar Ficheiro",
+            command=self.__on_importar_ficheiro_click,
+            font=("Helvetica", 12),
+            bg="#1E3A5F",       # Azul escuro
+            fg="white",         # Texto branco
+            activebackground="#27496d",  # Tom mais claro ao clicar
+            activeforeground="white",
+            relief="raised",      # Tipo de bordas
+            padx=10,
+            pady=5
+        )
+        btn_importar.place(relx=0.5, rely=0.5, anchor="center")
+
+        # Apenas para sabermos o que está a acontecer, no futuro podemos remover
+        print("Interface gráfica pronta.")
+        self.mainloop()
 
     def mostra_dlg_carregar_ficheiro(self):
         # TODO: tk mostra tkinter.filedialog para obter um ficheiro do utilizador
