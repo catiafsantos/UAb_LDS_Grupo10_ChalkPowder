@@ -1,5 +1,10 @@
-from typing import List, Dict, Any, Callable
+from typing import List, Dict, Any, Callable, Optional
 from graficos.eventos import Event
+
+import pandas as pd
+import seaborn as sns
+import matplotlib.pyplot as plt
+import os
 
 # =============================================================================
 # Eventos Utilizados pelo Model
@@ -85,6 +90,7 @@ class Model:
         self.view = view
         self.dados: List[Dict[str, Any]] = []   # Armazena os dados importados
         self.graficos: List[str] = []             # Lista de gráficos gerados
+        self.__figura: Optional[plt.Figure] = None  # Figura gerada para posterior gravação
 
         # Eventos de sucesso e estado
         self.__estado_processamento_evt: EstadoProcessamentoEvt = EstadoProcessamentoEvt()
@@ -174,7 +180,7 @@ class Model:
         self.__falha_gravacao_evt.invoke(mensagem)
 
     # =========================================================================
-    # Métodos de dados (Importação e Gravação)
+    # Métodos de dados (Importação, Geração, Gravação)
     # =========================================================================
 
     def importar_ficheiro(self, caminho: str) -> None:
@@ -182,13 +188,81 @@ class Model:
         Importa e processa o ficheiro de dados.        
         :param caminho: Caminho do ficheiro a importar.
         """
-        pass
-        # TODO: Implementar a lógica de importação do ficheiro.
+        self.mensagem_estado_processamento("Início da importação")
+        try:
+            if not caminho.endswith(".csv"):
+                self.__ficheiro_invalido_evt.invoke("Ficheiro selecionado não é CSV.")
+                return
+
+            self.dados = pd.read_csv(caminho).to_dict(orient="records")
+
+            if not self.dados:
+                self.mensagem_falha_importacao("Ficheiro CSV está vazio ou mal formatado.")
+                return
+
+            # Atualiza os gráficos disponíveis (exemplo fixo para já)
+            self.graficos = ["Barras"]
+            self.notifica_graficos_disponiveis()
+            self.mensagem_importacao_concluida()
+            self.mensagem_estado_processamento("Importação concluída")
+        except Exception as e:
+            self.mensagem_falha_importacao(f"Erro ao importar: {str(e)}")
+
+    def gerar_grafico(self, tipo: str, titulo: str) -> None:
+        """
+        Gera um gráfico a partir dos dados importados.
+        Armazena internamente a figura para posterior gravação.
+        """
+        self.mensagem_estado_processamento("A gerar gráfico")
+        try:
+            if not self.dados:
+                self.mensagem_falha_gravacao("Não há dados para gerar gráfico.")
+                return
+
+            df = pd.DataFrame(self.dados)
+
+            if "Categoria" not in df.columns or "Valor" not in df.columns:
+                self.mensagem_falha_gravacao("Ficheiro CSV deve conter colunas 'Categoria' e 'Valor'.")
+                return
+
+            plt.figure(figsize=(6, 4))
+            if tipo.lower() == "barras":
+                sns.barplot(x="Categoria", y="Valor", data=df)
+            elif tipo.lower() == "linhas":
+                sns.lineplot(x="Categoria", y="Valor", data=df)
+            else:
+                self.mensagem_falha_gravacao(f"Tipo de gráfico não suportado: {tipo}")
+                return
+
+            plt.title(titulo or "Gráfico")
+            plt.tight_layout()
+            self.__figura = plt.gcf()
+
+            self.mensagem_estado_processamento("Gráfico gerado com sucesso")
+
+        except Exception as e:
+            self.mensagem_falha_gravacao(f"Erro ao gerar gráfico: {str(e)}")
+        finally:
+            # Garante que fecha qualquer figura temporária se houve erro
+            if self.__figura is None:
+                plt.close()
 
     def gravar_grafico(self, caminho: str) -> None:
-        """
-        Grava o gráfico num ficheiro.        
-        :param caminho: Caminho onde o gráfico será gravado.
-        """
-        pass
-        # TODO: Implementar a lógica de gravação do gráfico.
+       """
+       Grava a figura do gráfico previamente gerada.
+       """
+       self.mensagem_estado_processamento("Início da gravação do gráfico")
+       if self.__figura is None:
+           self.mensagem_falha_gravacao("Nenhum gráfico foi gerado.")
+           return
+
+       try:
+           self.__figura.savefig(caminho)
+           self.mensagem_grafico_gravado()
+           self.mensagem_estado_processamento("Gravação concluída")
+       except Exception as e:
+           self.mensagem_falha_gravacao(f"Erro ao gravar gráfico: {str(e)}")
+       finally:
+           # Garante limpeza de recursos mesmo em caso de erro
+           plt.close(self.__figura)
+           self.__figura = None
