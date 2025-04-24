@@ -1,0 +1,73 @@
+== Importação de Dados ==
+User -> View : Seleciona “Importar Ficheiro"
+activate User
+activate View
+View -> Controller : Notifica que utilizador selecionou importar ficheiro
+activate Controller
+Controller -> View : Mostra Carregar Ficheiro()
+View --> User: Interface de seleção de ficheiro
+User -> View: Seleciona ficheiro
+deactivate User
+View -> Controller : Notifica ficheiro selecionado
+deactivate View
+Controller -> Model : Importar ficheiro()
+deactivate Controller 
+activate Model
+Model -> Model: try Validar ficheiro() 
+
+alt Processamento falhou
+    group Extensão do ficheiro diferente de .csv
+        Model -> Model : throw new EventoFicheiroInvalido("Ficheiro não é .csv")
+        Model --> View: Notifica ficheiro inválido 
+        activate View
+        View --> User: Mensagem de falha de importação
+        activate User
+        deactivate User
+        deactivate View
+    end
+
+    group Ficheiro está vazio 
+        Model -> Model : throw new EventoFalhaImportacao("CSV vazio")
+        Model --> View: Notifica falha de importação
+        activate View
+        View --> User: Mensagem de falha de importação
+        activate User
+        deactivate User
+        deactivate View
+    end
+
+    group Ficheiro está mal formatado
+        Model -> Model : throw new EventoFalhaImportacao("CSV mal formatado")
+        Model --> View: Notifica falha de importação
+        activate View
+        View --> User: Mensagem de falha de importação
+        activate User
+        deactivate User
+        deactivate View
+    end
+
+    group Exceção inesperada ao importar
+        Model -> Model : throw new EventoFalhaImportacao("Erro genérico")
+        Model --> View: Notifica falha de importação 
+        activate View
+        View --> User: Mensagem de falha inesperada na importação
+        activate User
+        deactivate User
+        deactivate View
+    end
+else Processamento foi bem sucedido
+    Model -> Model : Importar dados ()
+    Model -> View : Notifica estado do processamento
+    deactivate Model   
+    activate View
+    View -> Model : Solicita lista de gráficos disponíveis
+    activate Model
+    Model --> View: Lista de gráficos 
+    deactivate Model
+    deactivate View
+    View --> User: Mostra importação bem sucedida e opções de gráficos disponíveis
+    activate User
+    /'O passo abaixo existe apenas para que os pipes fiquem correctos'/
+        User-[hidden]->User
+    deactivate User 
+end

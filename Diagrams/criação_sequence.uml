@@ -1,0 +1,68 @@
+== Criação e customização do gráfico ==
+activate User
+User -> View : Escolhe tipo de gráfico
+activate View
+View -> Controller : Gráfico selecionado
+activate Controller
+Controller --> View: Mostra formulário de campos
+deactivate Controller
+View --> User: Mostra formulário
+User -> View: Preenche dados e submete
+deactivate User
+View -> Controller : Notifica novos parâmetros
+deactivate View
+activate Controller
+Controller -> Model : Gerar dados ()
+deactivate Controller
+activate Model
+
+Model -> Model: try Processar dados e gerar lista()
+
+alt Geração do gráfico falhou
+
+    group Não há dados disponíveis
+        Model -> Model : throw new EventoFalhaGeracao("Não há dados para gerar gráfico")
+        Model --> View : Notifica falha de geração de gráfico
+        activate View
+        View --> User : Mensagem de erro – sem dados
+        activate User
+        deactivate User
+        deactivate View
+    end
+
+    group Tipo de gráfico não suportado
+        Model -> Model : throw new EventoFalhaGeracao("Tipo de gráfico não suportado")
+        Model --> View : Notifica falha de geração de gráfico
+        activate View
+        View --> User : Mensagem de erro – tipo não suportado
+        activate User
+        deactivate User
+        deactivate View
+    end
+
+    group Exceção inesperada ao gerar gráfico
+        Model -> Model : throw new EventoFalhaGeracao("Erro genérico")
+        Model --> View : Notifica falha de geração de gráfico
+        activate View
+        View --> User : Mensagem de erro inesperado
+        activate User
+        deactivate User
+        deactivate View
+
+        group Limpa figura temporária
+            Model -> Model : finally { plt.close(figura) }
+        end
+    end
+
+else Geração do gráfico bem sucedida
+    Model -> Model : Gerar gráfico ()
+    Model -> View : Notifica gráfico disponível
+    deactivate Model
+    activate View
+    View -> User : Mostra gráfico
+    deactivate View
+    activate User
+    /'O passo abaixo existe apenas para que os pipes fiquem correctos'/
+        User-[hidden]->User 
+    deactivate User
+end

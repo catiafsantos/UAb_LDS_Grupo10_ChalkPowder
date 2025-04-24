@@ -1,0 +1,29 @@
+actor User
+participant View
+participant Controller
+participant Model
+
+
+== Inicialização do Programa ==
+/'O passo abaixo existe apenas para que os pipes fiquem correctos'/
+User-[hidden]->User 
+activate User
+User -> Controller : Iniciar Programa()
+
+activate Controller
+
+Controller -> Controller : try Ativar Interface()
+alt Falha ao ativar interface
+    Controller -> Controller : catch Exception
+    Controller -> User : Mostrar erro "Falha ao iniciar a interface"
+    deactivate User
+    Controller -> Controller : Terminar programa
+else Interface iniciada com sucesso
+    Controller -> View : Ativar Interface()
+    deactivate Controller
+    activate View
+    View -> View : Disponibilizar UI (Janelas e Opções)
+    /'O passo abaixo existe apenas para que os pipes fiquem correctos'/
+        View-[hidden]->View 
+    deactivate View
+end

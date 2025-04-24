@@ -1,0 +1,58 @@
+== Gravação de Gráfico ==
+User -> View : Seleciona opção de gravar "Guardar Gráfico" 
+activate User
+View -> Controller : Notifica solicitação de gravação
+activate View
+activate Controller
+Controller --> View : Mostra formulário de gravação
+View --> User : Mostra formulário de gravação
+deactivate Controller
+User -> View : Preenche e submete 
+deactivate User
+View -> Controller : Notifica solicitação de gravação
+deactivate View
+activate Controller
+Controller -> Model : Gravar gráfico ()
+deactivate Controller
+activate Model
+
+Model -> Model : try Gravar gráfico ()
+
+alt Gravação falhou
+
+    group Não existe gráfico para gravar
+        Model -> Model : throw new FalhaGravacaoEvt("Nenhum gráfico disponível")
+        Model --> View : Notifica falha de gravação
+        activate View
+        View --> User : Mensagem de erro – nenhum gráfico disponível
+        activate User
+        deactivate User
+        deactivate View
+    end
+
+    group Exceção ao gravar gráfico
+        Model -> Model : throw new FalhaGravacaoEvt("Erro genérico")
+        Model --> View : Notifica falha de gravação
+        activate View
+        View --> User : Mensagem de erro inesperado ao gravar
+        activate User
+        deactivate User
+        deactivate View
+
+        group Limpa figura temporária
+            Model -> Model : finally { plt.close(figura) }
+        end
+    end
+
+else Gravação bem sucedida
+    Model -> Model : Salvar figura no directório escolhido
+    Model -> View : Notifica gráfico gravado
+    deactivate Model
+    activate View
+    View --> User : Mensagem de resultado 
+    deactivate View
+    activate User
+    /'O passo abaixo existe apenas para que os pipes fiquem correctos'/
+        User-[hidden]->User 
+    deactivate User
+end
