@@ -201,7 +201,7 @@ class Model:
                 return
 
             # Atualiza os gráficos disponíveis (exemplo fixo para já)
-            self.graficos = ["Barras"]
+            self.graficos = ["Barras", "Linhas"]
             self.notifica_graficos_disponiveis()
             self.mensagem_importacao_concluida()
             self.mensagem_estado_processamento("Importação concluída")
