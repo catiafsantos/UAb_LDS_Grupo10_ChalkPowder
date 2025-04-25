@@ -4,6 +4,7 @@ from graficos.eventos import Event
 import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
+import traceback
 import os
 
 # =============================================================================
@@ -81,6 +82,27 @@ class FalhaGravacaoEvt(Event):
     def invoke(self, mensagem: str) -> None:
         super().invoke(mensagem)
 
+class FalhaGeracaoEvt(Event):
+    """
+    Evento para notificar que ocorreu uma falha durante a geração do gráfico.
+    Os handlers recebem uma mensagem específica de falha de geração.
+    """
+    def add_handler(self, handler: Callable[[str], None]) -> None:
+        super().add_handler(handler)
+    def invoke(self, mensagem: str) -> None:
+        super().invoke(mensagem)
+
+# --- Para simular o Throw do C# ---
+class ErroInternoEvt(Event):
+    """
+    Evento para notificar erros internos com stack trace.
+    A View pode decidir se quer mostrar esta mensagem ou apenas guardar.
+    """
+    def add_handler(self, handler: Callable[[str], None]) -> None:
+        super().add_handler(handler)
+    def invoke(self, stacktrace: str) -> None:
+        super().invoke(stacktrace)
+
 # =============================================================================
 # Classe Model
 # =============================================================================
@@ -101,9 +123,13 @@ class Model:
         # Eventos para falhas diferenciadas
         self.__falha_importacao_evt: FalhaImportacaoEvt = FalhaImportacaoEvt()
         self.__falha_gravacao_evt: FalhaGravacaoEvt = FalhaGravacaoEvt()
+        self.__falha_geracao_evt : FalhaGeracaoEvt = FalhaGeracaoEvt()
 
         # Evento genérico de ficheiro inválido:
         self.__ficheiro_invalido_evt: FicheiroInvalidoEvt = FicheiroInvalidoEvt()
+
+        # Evento para erros internos (simulando o Throw do C#)
+        self.__erro_interno_evt : ErroInternoEvt = ErroInternoEvt()
 
     # =========================================================================
     # Propriedades para acesso aos eventos
@@ -136,6 +162,15 @@ class Model:
     @property
     def ficheiro_invalido_evt(self) -> FicheiroInvalidoEvt:
         return self.__ficheiro_invalido_evt
+    
+    @property
+    def falha_geracao_evt(self) -> FalhaGeracaoEvt: 
+        return self.__falha_geracao_evt
+    
+    @property
+    def erro_interno_evt(self) -> ErroInternoEvt: 
+        return self.__erro_interno_evt
+
 
     # =========================================================================
     # Métodos de Notificação (Invokes encapsulados)
@@ -179,6 +214,12 @@ class Model:
         """
         self.__falha_gravacao_evt.invoke(mensagem)
 
+    def mensagem_falha_geracao (self, mensagem: str = "Falha na geração do gráfico.") -> None:
+        """
+        Notifica que ocorreu uma falha específica na geração do gráfico.
+        """
+        self.__falha_geracao_evt.invoke(mensagem)
+
     # =========================================================================
     # Métodos de dados (Importação, Geração, Gravação)
     # =========================================================================
@@ -196,6 +237,14 @@ class Model:
 
             self.dados = pd.read_csv(caminho).to_dict(orient="records")
 
+            df = pd.DataFrame(self.dados)
+
+            # Verifica se o DataFrame contém as colunas necessárias
+            # Neste momento está fixo porém podemos por a view a enviar esses valores.
+            if "Categoria" not in df.columns or "Valor" not in df.columns:
+                self.mensagem_falha_importacao("Ficheiro CSV mal formatado.")
+                return            
+
             if not self.dados:
                 self.mensagem_falha_importacao("Ficheiro CSV está vazio ou mal formatado.")
                 return
@@ -206,6 +255,11 @@ class Model:
             self.mensagem_importacao_concluida()
             self.mensagem_estado_processamento("Importação concluída")
         except Exception as e:
+            stacktrace = traceback.format_exc()
+
+            # 1. Evento técnico (equivalente ao throw ex no C#)
+            self.__erro_interno_evt.invoke(stacktrace)
+            # 2. Evento funcional amigável (mensagem para a View)
             self.mensagem_falha_importacao(f"Erro ao importar: {str(e)}")
 
     def gerar_grafico(self, tipo: str, titulo: str) -> None:
@@ -216,14 +270,10 @@ class Model:
         self.mensagem_estado_processamento("A gerar gráfico")
         try:
             if not self.dados:
-                self.mensagem_falha_gravacao("Não há dados para gerar gráfico.")
+                self.mensagem_falha_geracao("Não há dados para gerar gráfico.")
                 return
 
             df = pd.DataFrame(self.dados)
-
-            if "Categoria" not in df.columns or "Valor" not in df.columns:
-                self.mensagem_falha_gravacao("Ficheiro CSV deve conter colunas 'Categoria' e 'Valor'.")
-                return
 
             plt.figure(figsize=(6, 4))
             if tipo.lower() == "barras":
@@ -231,7 +281,7 @@ class Model:
             elif tipo.lower() == "linhas":
                 sns.lineplot(x="Categoria", y="Valor", data=df)
             else:
-                self.mensagem_falha_gravacao(f"Tipo de gráfico não suportado: {tipo}")
+                self.mensagem_falha_geracao(f"Tipo de gráfico não suportado: {tipo}")
                 return
 
             plt.title(titulo or "Gráfico")
@@ -241,7 +291,12 @@ class Model:
             self.mensagem_estado_processamento("Gráfico gerado com sucesso")
 
         except Exception as e:
-            self.mensagem_falha_gravacao(f"Erro ao gerar gráfico: {str(e)}")
+            stacktrace = traceback.format_exc()
+
+            # 1. Evento técnico (equivalente ao throw ex no C#)
+            self.__erro_interno_evt.invoke(stacktrace)
+            # 2. Evento funcional amigável (mensagem para a View)
+            self.mensagem_falha_geracao(f"Erro ao gerar gráfico: {str(e)}")
         finally:
             # Garante que fecha qualquer figura temporária se houve erro
             if self.__figura is None:
@@ -251,17 +306,23 @@ class Model:
        """
        Grava a figura do gráfico previamente gerada.
        """
-       self.mensagem_estado_processamento("Início da gravação do gráfico")
-       if self.__figura is None:
-           self.mensagem_falha_gravacao("Nenhum gráfico foi gerado.")
-           return
+       self.mensagem_estado_processamento("Início da gravação do gráfico")       
 
        try:
+           if self.__figura is None:
+            self.mensagem_falha_gravacao("Nenhum gráfico foi gerado.")
+            return
+       
            self.__figura.savefig(caminho)
            self.mensagem_grafico_gravado()
            self.mensagem_estado_processamento("Gravação concluída")
        except Exception as e:
-           self.mensagem_falha_gravacao(f"Erro ao gravar gráfico: {str(e)}")
+            stacktrace = traceback.format_exc()
+
+            # 1. Evento técnico (equivalente ao throw ex no C#)
+            self.__erro_interno_evt.invoke(stacktrace)
+            # 2. Evento funcional amigável (mensagem para a View)           
+            self.mensagem_falha_gravacao(f"Erro ao gravar gráfico: {str(e)}")
        finally:
            # Garante limpeza de recursos mesmo em caso de erro
            plt.close(self.__figura)
