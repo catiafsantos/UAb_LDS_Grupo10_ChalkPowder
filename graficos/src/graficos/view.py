@@ -1,7 +1,11 @@
+import traceback
 from typing import Callable
-from graficos.eventos import Event
 import tkinter as tk
-from tkinter import filedialog
+from tkinter import filedialog, messagebox, ttk
+
+import matplotlib.pyplot as plt
+
+from graficos.eventos import Event
 
 
 # Eventos da View
