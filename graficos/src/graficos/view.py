@@ -67,18 +67,15 @@ class View(tk.Tk):
         # Eventos expostos pela view
         self.importar_ficheiro_click_evt: ImportarFicheiroClickEvt = ImportarFicheiroClickEvt()
         self.__ficheiro_selecionado_evt: FicheiroSelecionadoClickEvt = FicheiroSelecionadoClickEvt()
-
-        #  TODO: é preciso fazer invoke() deste evento quando o User selecionar/clicar opção para 
-        #  escolher o gráfico
         self.__grafico_selecionado_click_evt : GraficoSelecionadoClickEvt = GraficoSelecionadoClickEvt()
-
-        # TODO: é preciso fazer invoke() deste evento quando o User selecionar/clicar opção para 
-        #  gravar gráfico
+        self.__submissao_parametros_evt = SubmissaoParametrosEvt()
         self.__solicita_guardar_grafico_click_evt: SolicitaGuardarGraficoClickEvt = SolicitaGuardarGraficoClickEvt()
-
-        # TODO: é preciso fazer invoke() deste evento quando o User selecionar/clicar opção para 
-        #  gravar gráfico
         self.__grava_grafico_click_evt: GravaGraficoClickEvt = GravaGraficoClickEvt()
+
+        # Variáveis de Estado
+        self.estado_var = tk.StringVar()
+        self.graficos_disponiveis: list[str] = []
+        self.grafico_var = tk.StringVar(value="Escolha um gráfico")
 
     # Propriedades para acesso a eventos
     @property
@@ -88,7 +85,11 @@ class View(tk.Tk):
     @property
     def grafico_selecionado_click_evt(self):
         return self.__grafico_selecionado_click_evt
-    
+        
+    @property
+    def submissao_parametros_evt(self):
+        return self.__submissao_parametros_evt
+        
     @property
     def solicita_guardar_grafico_click_evt(self):
         return self.__solicita_guardar_grafico_click_evt
