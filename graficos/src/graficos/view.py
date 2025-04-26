@@ -201,8 +201,36 @@ class View(tk.Tk):
         if grafico != "Escolha um gráfico":
             self.__grafico_selecionado_click_evt.invoke(grafico)
             self.mostra_mensagem_info(f"Gráfico selecionado: {grafico}")
+
+    def __on_guardar_grafico_click(self):
+        # Método que informa o Controller que o utilizador clicou no botão "Guardar gráfico"
+        self.__solicita_guardar_grafico_click_evt.invoke()
+
+    def __on_submeter_parametros(self):
+        # Método que informa o Controller que os parâmetros do formulário foram preenchidos
+        self.mostra_mensagem_info("A validar os parâmetros...")
+        self.update_idletasks()
+
+        if self.opcao_labels.get() == "usar_colunas":
+            x_col, y_col = self.x_var.get(), self.y_var.get()
+            if x_col == "Escolher coluna X" or y_col == "Escolher coluna Y":
+                self.mostra_erro_ficheiro("Tem de selecionar colunas para os eixos.")
+                self.mostra_mensagem_info("Faltam selecionar colunas.")
+                return
+            x_label, y_label = x_col, y_col
+        else:
+            x_col, y_col = None, None
+            x_label, y_label = self.x_label_var.get().strip(), self.y_label_var.get().strip()
+            if not x_label or not y_label:
+                self.mostra_erro_ficheiro("Tem de preencher os nomes dos eixos.")
+                self.mostra_mensagem_info("Faltam nomes personalizados.")
+                return
+                
+        self.mostra_mensagem_info("Parâmetros corretos. A gerar gráfico...")
+        self.__submissao_parametros_evt.invoke(x_col, y_col, x_label, y_label)
         
     def mostra_dlg_carregar_ficheiro(self):
+        
         # Método que mostra o diálogo para carregar um ficheiro 
         print("View recebeu comando para mostra file selection dlg e obter ficheiro de dados do User")
         path = filedialog.askopenfilename(
