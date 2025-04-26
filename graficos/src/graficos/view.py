@@ -272,9 +272,64 @@ class View(tk.Tk):
         else:
             self.mostra_mensagem_info("Operação de gravação cancelada.")
         
-    def mostra_dlg_grava_grafico(self):
-        # chamado pelo controller quando é hora de gravar o gráfico
-        # TODO: Penso que a melhor opção é usar um diálogo de tkinter.filedialog
-        print("View recebeu comando para gravar gráfico")
+    # Outros
+    def notifica_ficheiro_selecionado(self, fullpath: str):
+        # Método que notifica o controller que um ficheiro foi selecionado
+        self.__ficheiro_selecionado_evt.invoke(fullpath)
+
+    # Método que mostra o formulário com os vários parâmetros
+   def mostra_formulario_parametros(self, colunas: list[str]):
+        # Inicializar variáveis e opções
+        self.x_var = tk.StringVar(value="Escolher coluna X")
+        self.y_var = tk.StringVar(value="Escolher coluna Y")
+        self.x_label_var = tk.StringVar(value="")
+        self.y_label_var = tk.StringVar(value="")
+        self.opcao_labels = tk.StringVar(value="usar_colunas")
+
+        # Frame do formulário
+        self.form_frame = tk.Frame(self, bg="white")
+        self.form_frame.place(relx=0.5, rely=0.5, anchor="center")
+
+        # Opções de labels
+        self.rb_usar_colunas = tk.Radiobutton(
+            self.form_frame, text="Usar nomes das colunas como rótulos dos eixos",
+            variable=self.opcao_labels, value="usar_colunas",
+            command=self.__atualizar_visibilidade_labels, bg="white"
+        )
+        self.rb_usar_colunas.grid(row=0, column=0, columnspan=2, pady=(0, 10), sticky="w")
+
+        self.rb_personalizar = tk.Radiobutton(
+            self.form_frame, text="Personalizar nomes dos eixos",
+            variable=self.opcao_labels, value="personalizar",
+            command=self.__atualizar_visibilidade_labels, bg="white"
+        )
+        self.rb_personalizar.grid(row=1, column=0, columnspan=2, pady=(0, 20), sticky="w")
+
+        # Dropdowns para escolha de colunas
+        self.dropdown_x = ttk.Combobox(self.form_frame, textvariable=self.x_var, values=colunas, state="readonly", width=30)
+        self.dropdown_y = ttk.Combobox(self.form_frame, textvariable=self.y_var, values=colunas, state="readonly", width=30)
+        self.dropdown_x.grid(row=2, column=0, columnspan=2, pady=5)
+        self.dropdown_y.grid(row=3, column=0, columnspan=2, pady=5)
+
+        # Entradas de texto para personalizar labels
+        style = ttk.Style()
+        style.configure("Custom.TEntry", foreground="#1E3A5F", font=("Helvetica", 11),
+                        padding=10, relief="solid", borderwidth=1, background="white")
+
+        self.entry_x_label = ttk.Entry(self.form_frame, textvariable=self.x_label_var, style="Custom.TEntry", width=30)
+        self.entry_y_label = ttk.Entry(self.form_frame, textvariable=self.y_label_var, style="Custom.TEntry", width=30)
+
+        self.label_x_entry = tk.Label(self.form_frame, text="Eixo X", bg="white", font=("Helvetica", 10))
+        self.label_y_entry = tk.Label(self.form_frame, text="Eixo Y", bg="white", font=("Helvetica", 10))
+
+        # Botão Submeter
+        self.btn_submeter = tk.Button(
+            self.form_frame, text="Submeter",
+            command=self.__on_submeter_parametros,
+            font=("Helvetica", 11), bg="#1E3A5F", fg="white"
+        )
+        self.btn_submeter.grid(row=5, column=0, columnspan=2, pady=20)
+
+        self.__atualizar_visibilidade_labels() 
     
     
