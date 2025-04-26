@@ -61,6 +61,16 @@ class GraficoDisponivelEvt(Event):
     def invoke(self, lista_graficos: List[str]) -> None:
         super().invoke(lista_graficos)
 
+class GraficoGeradoEvt(Event):
+    """
+    Evento emitido quando o gráfico está gerado e pronto para ser mostrado.
+    Os handlers recebem uma lista de strings com os gráficos disponíveis.
+    """
+    def add_handler(self, handler: Callable[[List[str]], None]) -> None:
+        super().add_handler(handler)
+    def invoke(self) -> None:
+        super().invoke()
+
 # --- Novos eventos para diferenciar os tipos de falha ---
 class FalhaImportacaoEvt(Event):
     """
@@ -116,17 +126,23 @@ class Model:
 
         # Eventos de sucesso e estado
         self.__estado_processamento_evt: EstadoProcessamentoEvt = EstadoProcessamentoEvt()
+        self.__estado_processamento_evt.add_handler(view.mostra_mensagem_info)
         self.__importacao_concluida_evt: ImportacaoConcluidaEvt = ImportacaoConcluidaEvt()
         self.__grafico_gravado_evt: GraficoGravadoEvt = GraficoGravadoEvt()
         self.__grafico_disponivel_evt: GraficoDisponivelEvt = GraficoDisponivelEvt()
-
+        self.__grafico_disponivel_evt.add_handler(view.atualiza_lista_graficos)
+        self.__grafico_gerado_evt: GraficoGeradoEvt = GraficoGeradoEvt()
+        self.__grafico_gerado_evt.add_handler(view.mostrar_grafico)
+        
         # Eventos para falhas diferenciadas
         self.__falha_importacao_evt: FalhaImportacaoEvt = FalhaImportacaoEvt()
+        self.__falha_importacao_evt.add_handler(view.mostra_erro_importacao)
         self.__falha_gravacao_evt: FalhaGravacaoEvt = FalhaGravacaoEvt()
         self.__falha_geracao_evt : FalhaGeracaoEvt = FalhaGeracaoEvt()
 
         # Evento genérico de ficheiro inválido:
         self.__ficheiro_invalido_evt: FicheiroInvalidoEvt = FicheiroInvalidoEvt()
+        self.__ficheiro_invalido_evt.add_handler(view.mostra_erro_ficheiro)
 
         # Evento para erros internos (simulando o Throw do C#)
         self.__erro_interno_evt : ErroInternoEvt = ErroInternoEvt()
@@ -170,6 +186,10 @@ class Model:
     @property
     def erro_interno_evt(self) -> ErroInternoEvt: 
         return self.__erro_interno_evt
+    
+    @property
+    def grafico_gerado_evt(self) -> GraficoGeradoEvt:
+        return self.__grafico_gerado_evt
 
 
     # =========================================================================
@@ -262,7 +282,7 @@ class Model:
             # 2. Evento funcional amigável (mensagem para a View)
             self.mensagem_falha_importacao(f"Erro ao importar: {str(e)}")
 
-    def gerar_grafico(self, tipo: str, titulo: str) -> None:
+    def gerar_grafico(self, tipo: str, x: str, y: str, x_label: Optional[str] = "", y_label: Optional[str] = "", titulo: Optional[str] = "") -> None:
         """
         Gera um gráfico a partir dos dados importados.
         Armazena internamente a figura para posterior gravação.
@@ -284,11 +304,16 @@ class Model:
                 self.mensagem_falha_geracao(f"Tipo de gráfico não suportado: {tipo}")
                 return
 
+            # Adiciona labels e título
+            plt.xlabel(x_label or x)
+            plt.ylabel(y_label or y)
             plt.title(titulo or "Gráfico")
             plt.tight_layout()
             self.__figura = plt.gcf()
 
             self.mensagem_estado_processamento("Gráfico gerado com sucesso")
+            self.__grafico_gerado_evt.invoke()
+            self.mensagem_estado_processamento("Gráfico pronto para visualização")  
 
         except Exception as e:
             stacktrace = traceback.format_exc()
@@ -301,6 +326,17 @@ class Model:
             # Garante que fecha qualquer figura temporária se houve erro
             if self.__figura is None:
                 plt.close()
+
+
+    def get_colunas_disponiveis(self) -> list[str]:
+        """
+        Retorna uma lista com os nomes das colunas disponíveis nos dados importados.    
+        Se não houver dados, retorna uma lista vazia.
+        """
+        if not self.dados:
+            return []
+        return list(pd.DataFrame(self.dados).columns)
+    
 
     def gravar_grafico(self, caminho: str) -> None:
        """
