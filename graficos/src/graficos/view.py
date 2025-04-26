@@ -1,3 +1,6 @@
+# Este código no futuro vai ter de ser dividido em ficheiros mais pequenos.
+
+
 import traceback
 from typing import Callable
 import tkinter as tk
