@@ -188,10 +188,19 @@ class View(tk.Tk):
         self.dropdown_menu["values"] = graficos
         self.grafico_var.set("Escolha um gráfico")
         self.dropdown_menu.place(relx=0.5, rely=0.4, anchor="center")
-        
+
+    # Callbacks de Ações do utilizador
     def __on_importar_ficheiro_click(self):
         # Método que informa o Controller que o utilizador clicou no botão "Importar Ficheiro"
         self.importar_ficheiro_click_evt.invoke()
+
+    def __on_grafico_selecionado(self, *args):
+        # Método que informa o Controller que o utilizador selecionou o tipo de gráfico
+        self.mostra_mensagem_info("Escolha de tipo de gráfico.")
+        grafico = self.grafico_var.get()
+        if grafico != "Escolha um gráfico":
+            self.__grafico_selecionado_click_evt.invoke(grafico)
+            self.mostra_mensagem_info(f"Gráfico selecionado: {grafico}")
         
     def mostra_dlg_carregar_ficheiro(self):
         # Método que mostra o diálogo para carregar um ficheiro 
