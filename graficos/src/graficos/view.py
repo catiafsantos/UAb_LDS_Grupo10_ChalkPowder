@@ -34,6 +34,14 @@ class GraficoSelecionadoClickEvt(Event):
     def invoke(self, grafico_selecionado: str):
         super().invoke(grafico_selecionado)
 
+class SubmissaoParametrosEvt(Event):
+    """Emitido quando o utilizador submete os parâmetros para construir o gráfico."""
+    def add_handler(self, handler: Callable[[str, str, str, str], None]):
+        super().add_handler(handler)
+
+    def invoke(self, x_col: str, y_col: str, x_label: str, y_label: str):
+        super().invoke(x_col, y_col, x_label, y_label)
+
 
 class SolicitaGuardarGraficoClickEvt(Event):
     """Evento emitido pela View quando o User seleciona opção de gravar
@@ -278,7 +286,7 @@ class View(tk.Tk):
         self.__ficheiro_selecionado_evt.invoke(fullpath)
 
     # Método que mostra o formulário com os vários parâmetros
-   def mostra_formulario_parametros(self, colunas: list[str]):
+    def mostra_formulario_parametros(self, colunas: list[str]):
         # Inicializar variáveis e opções
         self.x_var = tk.StringVar(value="Escolher coluna X")
         self.y_var = tk.StringVar(value="Escolher coluna Y")
