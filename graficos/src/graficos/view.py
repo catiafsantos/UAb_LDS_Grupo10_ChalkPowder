@@ -231,7 +231,6 @@ class View(tk.Tk):
 
     # Dialogs
     def mostra_dlg_carregar_ficheiro(self):
-        
         # Método que mostra o diálogo para carregar um ficheiro 
         self.mostra_mensagem_info("A iniciar importação de ficheiro...")
         self.btn_importar.config(state="disabled", text="A carregar...", cursor="watch")
@@ -254,10 +253,24 @@ class View(tk.Tk):
         finally:
             self.btn_importar.config(state="normal", text="Importar Ficheiro", cursor="hand2")
 
-
-    # Método que informa o Controller que o utilizador selecionou um ficheiro com determinado caminho
-    def notifica_ficheiro_selecionado(self, fullpath: str):
-        self.__ficheiro_selecionado_evt.invoke(fullpath)
+    # Método que mostra ao utilizador as opções de gravação do ficheiro
+    def mostra_dlg_grava_grafico(self):
+        path = filedialog.asksaveasfilename(
+            title="Guardar Gráfico Como",
+            defaultextension=".png",
+            filetypes=[
+                ("Imagem PNG", "*.png"),
+                ("Imagem JPEG", "*.jpg"),
+                ("Imagem SVG", "*.svg"),
+                ("Documento PDF", "*.pdf"),
+            ]
+        )
+        if path:
+            self.__grava_grafico_click_evt.invoke(path)
+            messagebox.showinfo("Sucesso", f"Gráfico guardado em:\n{path}")
+            self.voltar_menu_inicial()
+        else:
+            self.mostra_mensagem_info("Operação de gravação cancelada.")
         
     def mostra_dlg_grava_grafico(self):
         # chamado pelo controller quando é hora de gravar o gráfico
