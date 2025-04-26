@@ -331,5 +331,25 @@ class View(tk.Tk):
         self.btn_submeter.grid(row=5, column=0, columnspan=2, pady=20)
 
         self.__atualizar_visibilidade_labels() 
-    
-    
+
+    # Método que atualiza a visibilidade dos labels
+    def __atualizar_visibilidade_labels(self):
+        if self.opcao_labels.get() == "personalizar":
+            # Mostrar caixas de texto personalizadas
+            self.label_x_entry.grid(row=2, column=0, sticky="e", padx=(10, 5), pady=5)
+            self.entry_x_label.grid(row=2, column=1, sticky="w", padx=(5, 10), pady=5)
+
+            self.label_y_entry.grid(row=3, column=0, sticky="e", padx=(10, 5), pady=5)
+            self.entry_y_label.grid(row=3, column=1, sticky="w", padx=(5, 10), pady=5)
+
+            self.dropdown_x.grid_remove()
+            self.dropdown_y.grid_remove()
+        else:
+            # Mostrar dropdowns de colunas
+            self.dropdown_x.grid(row=2, column=0, columnspan=2, padx=10, pady=5)
+            self.dropdown_y.grid(row=3, column=0, columnspan=2, padx=10, pady=5)
+
+            self.label_x_entry.grid_remove()
+            self.label_y_entry.grid_remove()
+            self.entry_x_label.grid_remove()
+            self.entry_y_label.grid_remove()
