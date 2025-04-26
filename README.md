@@ -9,6 +9,16 @@ No terminal com a working directory na localização de run.py (na pasta grafico
 
 1. Usando o uv
 
+1.1 : Setup inicial:
+
+```sh
+machine:~/.../graficos % uv venv                                        
+machine:~/.../graficos % source .venv/bin/activate
+machine:~/.../graficos % uv sync 
+```
+
+1.2 : Correr o programa:
+
 ```sh
 machine:~/.../graficos$ uv run run.py 
 ```
