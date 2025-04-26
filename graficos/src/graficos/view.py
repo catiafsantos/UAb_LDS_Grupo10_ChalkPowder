@@ -53,6 +53,13 @@ class GravaGraficoClickEvt(Event):
     def invoke(self, caminho: str) -> None:
         super().invoke(caminho)
 
+# Simula o Throw do C#
+class ErroInternoEvt(Event):
+    """Emitido quando ocorre um erro interno no sistema."""
+    def add_handler(self, handler: Callable[[str], None]) -> None:
+        super().add_handler(handler)
+    def invoke(self, stacktrace: str) -> None:
+        super().invoke(stacktrace)
 
 class View(tk.Tk):
     def __init__(self) -> None:
