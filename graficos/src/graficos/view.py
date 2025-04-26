@@ -378,3 +378,18 @@ class View(tk.Tk):
         self.mostra_mensagem_info("Gráfico gerado.")
         # Mostra o gráfico
         plt.show()
+
+    # Método que permite voltar ao menu inicial
+    def voltar_menu_inicial(self):
+        """Reiniciar a interface para importar novo ficheiro."""
+        if hasattr(self, "form_frame") and self.form_frame.winfo_exists():
+            self.form_frame.destroy()
+        if hasattr(self, "dropdown_menu") and self.dropdown_menu.winfo_exists():
+            self.dropdown_menu.place_forget()
+        if hasattr(self, "botao_frame") and self.botao_frame.winfo_exists():
+            self.botao_frame.destroy()
+
+        if hasattr(self, "btn_importar"):
+            self.btn_importar.place(relx=0.5, rely=0.4, anchor="center")
+
+        self.mostra_mensagem_info("Pronto para importar um novo ficheiro.")
