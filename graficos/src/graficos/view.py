@@ -228,21 +228,32 @@ class View(tk.Tk):
                 
         self.mostra_mensagem_info("Parâmetros corretos. A gerar gráfico...")
         self.__submissao_parametros_evt.invoke(x_col, y_col, x_label, y_label)
-        
+
+    # Dialogs
     def mostra_dlg_carregar_ficheiro(self):
         
         # Método que mostra o diálogo para carregar um ficheiro 
-        print("View recebeu comando para mostra file selection dlg e obter ficheiro de dados do User")
-        path = filedialog.askopenfilename(
-        title="Selecionar ficheiro CSV",
-        filetypes=[("Ficheiros CSV", "*.csv"), ("Todos os ficheiros", "*.*")]
-        )
+        self.mostra_mensagem_info("A iniciar importação de ficheiro...")
+        self.btn_importar.config(state="disabled", text="A carregar...", cursor="watch")
+        self.update_idletasks()  # Atualiza o GUI imediatamente
 
-        if path:
-            print(f"Ficheiro selecionado: {path}")
-            self.notifica_ficheiro_selecionado(path)
-        else:
-            print("Nenhum ficheiro foi selecionado.")
+        try:
+            path = filedialog.askopenfilename(
+                title="Selecionar ficheiro CSV",
+                filetypes=[("Ficheiros CSV", "*.csv"), ("Todos os ficheiros", "*.*")]
+            )
+            if path:
+                self.notifica_ficheiro_selecionado(path)
+            else:
+                self.mostra_mensagem_info("Importação cancelada pelo utilizador.")
+        except Exception as e:
+            stack = traceback.format_exc()
+            print(stack)
+            self.mostra_mensagem_info("Erro ao selecionar ficheiro.")
+            self.mostra_erro_importacao(f"Ocorreu um erro ao selecionar o ficheiro: {str(e)}")
+        finally:
+            self.btn_importar.config(state="normal", text="Importar Ficheiro", cursor="hand2")
+
 
     # Método que informa o Controller que o utilizador selecionou um ficheiro com determinado caminho
     def notifica_ficheiro_selecionado(self, fullpath: str):
