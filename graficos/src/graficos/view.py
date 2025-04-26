@@ -99,45 +99,59 @@ class View(tk.Tk):
         return self.__grava_grafico_click_evt
 
     def ativar_interface(self):
-        # Inicia a interface gráfica
-        print("Iniciando a interface gráfica...")    # No futuro deve ser removido
-        self.title("Conversor .csv para Gráfico")
-        self.geometry("500x300")      # Tamanho da janela
-        self.configure(bg="#1E3A5F")  # Fundo azul escuro
+        try:
+            self.title("Conversor .csv para Gráfico")
+            self.geometry("500x300")
+            self.configure(bg="#1E3A5F")
 
-        self.frames = {}
+            # Frame principal
+            outer_frame = tk.Frame(self, bg="#1E3A5F")
+            outer_frame.pack(expand=True, fill=tk.BOTH)
 
-        # Frame externo com fundo azul escuro
-        outer_frame = tk.Frame(self, bg="#1E3A5F")
-        outer_frame.pack(expand=True, fill=tk.BOTH)
+            container = tk.Frame(outer_frame, bg="White", bd=1, relief="solid")
+            container.place(relx=0.5, rely=0.5, anchor="center", width=485, height=285)
+            container.grid_rowconfigure(0, weight=1)
+            container.grid_columnconfigure(0, weight=1)
 
-        # Frame interno com fundo branco
-        container = tk.Frame(outer_frame, bg="White", bd=1, relief="solid")
-        container.place(relx=0.5, rely=0.5, anchor="center", width=485, height=285)
+            # Título
+            titulo = tk.Label(
+                container, text="Conversor CSV para Gráfico",
+                font=("Helvetica", 14, "bold"), bg="white", fg="#1E3A5F"
+            )
+            titulo.place(relx=0.5, rely=0.20, anchor="center")
 
-        # Permitir expansão dos frames internos
-        container.grid_rowconfigure(0, weight=1)
-        container.grid_columnconfigure(0, weight=1)
-    
-        # Botão "Importar Ficheiro"
-        btn_importar = tk.Button(
-            container,
-            text="Importar Ficheiro",
-            command=self.__on_importar_ficheiro_click,
-            font=("Helvetica", 12),
-            bg="#1E3A5F",       # Azul escuro
-            fg="white",         # Texto branco
-            activebackground="#27496d",  # Tom mais claro ao clicar
-            activeforeground="white",
-            relief="raised",      # Tipo de bordas
-            padx=10,
-            pady=5
-        )
-        btn_importar.place(relx=0.5, rely=0.5, anchor="center")
+            # Botão Importar
+            self.btn_importar = tk.Button(
+                container, text="Importar Ficheiro", command=self.__on_importar_ficheiro_click,
+                font=("Helvetica", 12), bg="#1E3A5F", fg="white", activebackground="#27496d",
+                activeforeground="white", relief="raised", padx=10, pady=5, cursor="hand2"
+            )
+            self.btn_importar.place(relx=0.5, rely=0.4, anchor="center")
 
-        # Apenas para sabermos o que está a acontecer, no futuro podemos remover
-        print("Interface gráfica pronta.")
-        self.mainloop()
+            # Dropdown escondido
+            self.__configura_estilo_dropdown()
+            self.dropdown_menu = ttk.Combobox(
+                container, textvariable=self.grafico_var, state="readonly",
+                font=("Helvetica", 11), width=30, style="CustomCombobox.TCombobox"
+            )
+            self.dropdown_menu.place_forget()
+            self.grafico_var.trace_add("write", self.__on_grafico_selecionado)
+
+            # Label estado
+            self.label_estado = tk.Label(
+                container, textvariable=self.estado_var,
+                font=("Helvetica", 10), bg="white", fg="#1E3A5F"
+            )
+            self.label_estado.place(relx=0.5, rely=0.9, anchor="center")
+
+            self.mostra_mensagem_info("Pronto para iniciar.")
+            self.mainloop()
+
+        except Exception as e:
+            stack = traceback.format_exc()
+            print(stack)
+            messagebox.showerror("Erro Crítico", f"Ocorreu um erro ao iniciar a interface: {str(e)}")
+            self.destroy()
 
     def __on_importar_ficheiro_click(self):
         # Método que informa o Controller que o utilizador clicou no botão "Importar Ficheiro"
