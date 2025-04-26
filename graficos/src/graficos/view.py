@@ -61,6 +61,7 @@ class ErroInternoEvt(Event):
     def invoke(self, stacktrace: str) -> None:
         super().invoke(stacktrace)
 
+
 class View(tk.Tk):
     def __init__(self) -> None:
         super().__init__()
@@ -153,6 +154,24 @@ class View(tk.Tk):
             messagebox.showerror("Erro Crítico", f"Ocorreu um erro ao iniciar a interface: {str(e)}")
             self.destroy()
 
+    # configurações de estilo (combobox)
+    def __configura_estilo_dropdown(self):
+        style = ttk.Style()
+        style.theme_use("default")
+        style.configure(
+            "CustomCombobox.TCombobox",
+            foreground="white", background="#1E3A5F",
+            fieldbackground="#1E3A5F", arrowcolor="white",
+            selectforeground="white", selectbackground="#1E3A5F"
+        )
+        style.map(
+            "CustomCombobox.TCombobox",
+            fieldbackground=[('readonly', '#1E3A5F')],
+            foreground=[('readonly', 'white')],
+            background=[('readonly', '#1E3A5F')],
+            arrowcolor=[('active', 'white'), ('!disabled', 'white')]
+        )
+        
     def __on_importar_ficheiro_click(self):
         # Método que informa o Controller que o utilizador clicou no botão "Importar Ficheiro"
         self.importar_ficheiro_click_evt.invoke()
