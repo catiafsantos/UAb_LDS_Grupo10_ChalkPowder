@@ -171,6 +171,23 @@ class View(tk.Tk):
             background=[('readonly', '#1E3A5F')],
             arrowcolor=[('active', 'white'), ('!disabled', 'white')]
         )
+
+    # Métodos auxiliares da interface
+    def mostra_erro_importacao(self, mensagem: str):
+        messagebox.showerror("Erro de Importação", mensagem)
+
+    def mostra_erro_ficheiro(self, mensagem: str):
+        messagebox.showwarning("Ficheiro Inválido", mensagem)
+
+    def mostra_mensagem_info(self, mensagem: str):
+        self.estado_var.set(mensagem)
+
+    def atualiza_lista_graficos(self, graficos: list[str]):
+        self.graficos_disponiveis = graficos
+        self.btn_importar.place_forget()
+        self.dropdown_menu["values"] = graficos
+        self.grafico_var.set("Escolha um gráfico")
+        self.dropdown_menu.place(relx=0.5, rely=0.4, anchor="center")
         
     def __on_importar_ficheiro_click(self):
         # Método que informa o Controller que o utilizador clicou no botão "Importar Ficheiro"
