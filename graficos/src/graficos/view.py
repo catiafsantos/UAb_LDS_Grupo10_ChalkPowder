@@ -304,6 +304,13 @@ class View(tk.Tk):
         # Método que notifica o controller que um ficheiro foi selecionado
         self.__ficheiro_selecionado_evt.invoke(fullpath)
 
+    # Método que recebe notificação do Model de que um novo gráfico está disponível
+    def notificacao_estado_grafico_mudou(self, tipo_de_grafico: str):
+        colunas_disponiveis: list = []
+        self.__colunas_disponiveis_delegate.invoke(colunas_disponiveis)
+        if colunas_disponiveis:
+            self.mostra_formulario_parametros(colunas_disponiveis)
+
     # Método que mostra o formulário com os vários parâmetros
     def mostra_formulario_parametros(self, colunas: list[str]):
         # Inicializar variáveis e opções
