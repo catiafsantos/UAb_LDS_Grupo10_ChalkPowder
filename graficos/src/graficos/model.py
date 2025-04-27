@@ -124,6 +124,7 @@ class Model:
         self.graficos: List[str] = []             # Lista de gráficos gerados
         self.__figura: Optional[plt.Figure] = None  # Figura gerada para posterior gravação
 
+        # Existe Handlers para tratamentos específicos e restantes são tratados como genericos
         # Eventos de sucesso e estado
         self.__estado_processamento_evt: EstadoProcessamentoEvt = EstadoProcessamentoEvt()
         self.__estado_processamento_evt.add_handler(view.mostra_mensagem_info)
@@ -135,6 +136,7 @@ class Model:
         self.__grafico_gerado_evt.add_handler(view.mostrar_grafico)
         
         # Eventos para falhas diferenciadas
+        #TODO: Dividir o evento genérico de ficheiro inválido, em diversos eventos
         self.__falha_importacao_evt: FalhaImportacaoEvt = FalhaImportacaoEvt()
         self.__falha_importacao_evt.add_handler(view.mostra_erro_importacao)
         self.__falha_gravacao_evt: FalhaGravacaoEvt = FalhaGravacaoEvt()
@@ -249,6 +251,8 @@ class Model:
         Importa e processa o ficheiro de dados.        
         :param caminho: Caminho do ficheiro a importar.
         """
+        #TODO: Adicionar validação para o tamanho máximo de ficheiro
+
         self.mensagem_estado_processamento("Início da importação")
         try:
             if not caminho.endswith(".csv"):
@@ -260,11 +264,11 @@ class Model:
             df = pd.DataFrame(self.dados)
 
             # Verifica se o DataFrame contém as colunas necessárias
-            # Neste momento está fixo porém podemos por a view a enviar esses valores.
+            # Neste momento está fixo porém podemos por a view a enviar esses valores.            
             if "Categoria" not in df.columns or "Valor" not in df.columns:
                 self.mensagem_falha_importacao("Ficheiro CSV mal formatado.")
-                return            
-
+                return                        
+            
             if not self.dados:
                 self.mensagem_falha_importacao("Ficheiro CSV está vazio ou mal formatado.")
                 return
@@ -274,9 +278,13 @@ class Model:
             self.notifica_graficos_disponiveis()
             self.mensagem_importacao_concluida()
             self.mensagem_estado_processamento("Importação concluída")
+
+        except pd.errors.EmptyDataError:
+        # CSV completamente vazio: ficheiro vazio!
+            self.mensagem_falha_importacao("Ficheiro CSV está vazio.")
+
         except Exception as e:
             stacktrace = traceback.format_exc()
-
             # 1. Evento técnico (equivalente ao throw ex no C#)
             self.__erro_interno_evt.invoke(stacktrace)
             # 2. Evento funcional amigável (mensagem para a View)
