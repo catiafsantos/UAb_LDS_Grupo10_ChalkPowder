@@ -68,7 +68,11 @@ class Controller:
         view.grava_grafico_click_evt.add_handler(self.user_grava_grafico)
 
     def run(self):
-        self.view.ativar_interface()
+        try:
+            self.view.ativar_interface()
+        except Exception as e:
+            print("Biblioteca de interface indisponível, falha crítica.")
+            print("Contacte o suporte: erro f{e}")
 
     def user_importa_ficheiro(self) -> None:
         """User selecionou importar ficheiro"""
