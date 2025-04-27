@@ -37,7 +37,18 @@ class GraficoSelecionadoClickEvt(Event):
     def invoke(self, grafico_selecionado: str):
         super().invoke(grafico_selecionado)
 
+
+class ColunasDisponiveisDelegate(Event):
+    """Event usado para obter lista de colunas disponíveis.
+    """
+    def add_handler(self, handler: Callable[[list], None]):
+        super().add_handler(handler)
+    
+    def invoke(self, colunas_disponiveis: list):
+        super().invoke(colunas_disponiveis)
 class SubmissaoParametrosEvt(Event):
+
+
     """Emitido quando o utilizador submete os parâmetros para construir o gráfico."""
     def add_handler(self, handler: Callable[[str, str, str, str], None]):
         super().add_handler(handler)
