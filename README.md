@@ -7,7 +7,7 @@ Programa do grupo 10 "ChalkPowder" na UC de Laboratório de Desenvolvimento de S
 
 No terminal com a working directory na localização de run.py (na pasta graficos).
 
-1. Usando o uv
+1. Dois passos necessários para utilizar com o uv:
 
 1.1 : Setup inicial:
 
@@ -18,13 +18,6 @@ machine:~/.../graficos % uv sync
 ```
 
 1.2 : Correr o programa:
-
-```sh
-machine:~/.../graficos$ uv run run.py 
-```
-
-2. Usando o Python directamente
-
 ```sh
 machine:~/.../graficos$ python run.py
 ```
