@@ -91,6 +91,7 @@ class View(tk.Tk):
         self.importar_ficheiro_click_evt: ImportarFicheiroClickEvt = ImportarFicheiroClickEvt()
         self.__ficheiro_selecionado_evt: FicheiroSelecionadoClickEvt = FicheiroSelecionadoClickEvt()
         self.__grafico_selecionado_click_evt : GraficoSelecionadoClickEvt = GraficoSelecionadoClickEvt()
+        self.__colunas_disponiveis_delegate: ColunasDisponiveisDelegate = ColunasDisp
         self.__submissao_parametros_evt = SubmissaoParametrosEvt()
         self.__solicita_guardar_grafico_click_evt: SolicitaGuardarGraficoClickEvt = SolicitaGuardarGraficoClickEvt()
         self.__grava_grafico_click_evt: GravaGraficoClickEvt = GravaGraficoClickEvt()
@@ -108,6 +109,10 @@ class View(tk.Tk):
     @property
     def grafico_selecionado_click_evt(self):
         return self.__grafico_selecionado_click_evt
+
+    @property
+    def colunas_disponiveis_delegate(self):
+        return self.__colunas_disponiveis_delegate
         
     @property
     def submissao_parametros_evt(self):
