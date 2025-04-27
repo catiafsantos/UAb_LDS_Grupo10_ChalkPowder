@@ -4,7 +4,11 @@ version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
 authors = [
-    { name = "andreiaRomao", email = "1702430@estudante.uab.pt" }
+    { name = "Andreia Romão", email = "1702430@estudante.uab.pt" },
+    { name = "Cátia Santos", email = "1702194@estudante.uab.pt" },
+    { name = "Júlio Martins", email = "1900881@estudante.uab.pt" },
+    { name = "Mariana Barrote", email = "2200640@estudante.uab.pt" },
+    { name = "Miguel Lopes", email = "1900798@estudante.uab.pt" },
 ]
 requires-python = ">=3.13"
 dependencies = [
