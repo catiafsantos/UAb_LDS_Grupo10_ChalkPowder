@@ -21,3 +21,24 @@ machine:~/.../graficos % uv sync
 ```sh
 machine:~/.../graficos$ python run.py
 ```
+
+Listagem de directorias:
+UAb_LDS_Grupo10_ChalkPowder/
+├── Diagramas/
+│   (diagramas de componentes e sequências do projeto)
+│
+├── FicheirosTeste/
+│   (ficheiros de teste para a aplicação)
+│
+├── README.md
+│
+├── graficos/
+│   ├── pyproject.toml
+│   ├── run.py
+│   ├── uv.lock
+│   └── src/
+│       └── graficos/
+│           ├── controller.py
+│           ├── eventos.py
+│           ├── model.py
+│           └── view.py
