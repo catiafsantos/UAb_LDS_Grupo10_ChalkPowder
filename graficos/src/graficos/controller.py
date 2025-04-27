@@ -63,6 +63,7 @@ class Controller:
         view.importar_ficheiro_click_evt.add_handler(self.user_importa_ficheiro)
         view.ficheiro_selecionado_evt.add_handler(self.user_seleciona_ficheiro)
         view.grafico_selecionado_click_evt.add_handler(self.user_selecionou_grafico)
+        view.submissao_parametros_evt.add_handler(self.user_submeteu_parametros)
         view.solicita_guardar_grafico_click_evt.add_handler(self.user_solicitou_gravacao)
         view.grava_grafico_click_evt.add_handler(self.user_grava_grafico)
 
@@ -76,19 +77,21 @@ class Controller:
     def user_seleciona_ficheiro(self, caminho: str):
         """User selecionou um ficheiro para importar."""
         self.__importar_ficheiro_evt.invoke(caminho)
-    
-    def user_selecionou_grafico(self, grafico_selecionado: str):
-        """User selecionou tipo de gráfico."""
-        # TODO: ...
-        ...
-    
+
+    def user_selecionou_grafico(self, tipo: str):
+        self.tipo_grafico = tipo
+        colunas = self.model.get_colunas_disponiveis()
+        self.view.mostra_formulario_parametros(colunas)
+
+    def user_submeteu_parametros(self, x: str, y: str, x_label: str, y_label: str):
+        self.model.gerar_grafico(self.tipo_grafico, x, y, x_label, y_label)
+
     def user_solicitou_gravacao(self):
         """User selecionou opção de gravar gráfico"""
         # Notifica a View para mostrar formulário (diálogo) de gravação
         self.__mostra_dlg_grava_grafico_evt.invoke()
-    
+
     def user_grava_grafico(self, caminho: str):
         """User grava gráfico."""
         # Notifica Model para gravar gráfico com a fullpath especificada
         self.__grava_grafico_evt.invoke(caminho)
-        
