@@ -23,6 +23,7 @@ machine:~/.../graficos$ python run.py
 ```
 
 Listagem de directorias:
+```sh
 UAb_LDS_Grupo10_ChalkPowder/
 ├── Diagramas/
 │   (diagramas de componentes e sequências do projeto)
@@ -42,3 +43,4 @@ UAb_LDS_Grupo10_ChalkPowder/
 │           ├── eventos.py
 │           ├── model.py
 │           └── view.py
+```
