@@ -36,17 +36,7 @@ class GraficoSelecionadoClickEvt(Event):
         super().invoke(grafico_selecionado)
 
 
-class ColunasDisponiveisDelegate(Event):
-    """Event usado para obter lista de colunas disponíveis.
-    """
-    def add_handler(self, handler: Callable[[list], None]):
-        super().add_handler(handler)
-    
-    def invoke(self, colunas_disponiveis: list):
-        super().invoke(colunas_disponiveis)
 class SubmissaoParametrosEvt(Event):
-
-
     """Emitido quando o utilizador submete os parâmetros para construir o gráfico."""
     def add_handler(self, handler: Callable[[str, str, str, str], None]):
         super().add_handler(handler)
@@ -89,7 +79,6 @@ class View(tk.Tk):
         self.importar_ficheiro_click_evt: ImportarFicheiroClickEvt = ImportarFicheiroClickEvt()
         self.__ficheiro_selecionado_evt: FicheiroSelecionadoClickEvt = FicheiroSelecionadoClickEvt()
         self.__grafico_selecionado_click_evt : GraficoSelecionadoClickEvt = GraficoSelecionadoClickEvt()
-        sself.__colunas_disponiveis_delegate: ColunasDisponiveisDelegate = ColunasDisponiveisDelegate()
         self.__submissao_parametros_evt = SubmissaoParametrosEvt()
         self.__solicita_guardar_grafico_click_evt: SolicitaGuardarGraficoClickEvt = SolicitaGuardarGraficoClickEvt()
         self.__grava_grafico_click_evt: GravaGraficoClickEvt = GravaGraficoClickEvt()
@@ -107,10 +96,6 @@ class View(tk.Tk):
     @property
     def grafico_selecionado_click_evt(self):
         return self.__grafico_selecionado_click_evt
-
-    @property
-    def colunas_disponiveis_delegate(self):
-        return self.__colunas_disponiveis_delegate
         
     @property
     def submissao_parametros_evt(self):
@@ -301,13 +286,6 @@ class View(tk.Tk):
     def notifica_ficheiro_selecionado(self, fullpath: str):
         # Método que notifica o controller que um ficheiro foi selecionado
         self.__ficheiro_selecionado_evt.invoke(fullpath)
-
-    # Método que recebe notificação do Model de que um novo gráfico está disponível
-    def notificacao_estado_grafico_mudou(self, tipo_de_grafico: str):
-        colunas_disponiveis: list = []
-        self.__colunas_disponiveis_delegate.invoke(colunas_disponiveis)
-        if colunas_disponiveis:
-            self.mostra_formulario_parametros(colunas_disponiveis)
 
     # Método que mostra o formulário com os vários parâmetros
     def mostra_formulario_parametros(self, colunas: list[str]):
