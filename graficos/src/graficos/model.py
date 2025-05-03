@@ -252,11 +252,20 @@ class Model:
         :param caminho: Caminho do ficheiro a importar.
         """
         #TODO: Adicionar validação para o tamanho máximo de ficheiro
+        MAX_TAMANHO_MB = 10  # Tamanho máximo em MB
 
         self.mensagem_estado_processamento("Início da importação")
         try:
             if not caminho.endswith(".csv"):
                 self.__ficheiro_invalido_evt.invoke("Ficheiro selecionado não é CSV.")
+                return
+
+            # Validação do tamanho do ficheiro (em bytes)
+            tamanho_bytes = os.path.getsize(caminho)
+            tamanho_mb = tamanho_bytes / (1024 * 1024)
+            # Verifica se o tamanho do ficheiro excede o máximo permitido
+            if tamanho_mb > MAX_TAMANHO_MB:
+                self.__ficheiro_invalido_evt.invoke(f"O ficheiro excede o tamanho máximo de {MAX_TAMANHO_MB} MB.")
                 return
 
             self.dados = pd.read_csv(caminho).to_dict(orient="records")
@@ -270,7 +279,7 @@ class Model:
                 return                        
             
             if not self.dados:
-                self.mensagem_falha_importacao("Ficheiro CSV está vazio ou mal formatado.")
+                self.mensagem_falha_importacao("Ficheiro CSV está vazio.")
                 return
 
             # Atualiza os gráficos disponíveis (exemplo fixo para já)
