@@ -72,7 +72,7 @@ class Controller:
             self.view.ativar_interface()
         except Exception as e:
             print("Biblioteca de interface indisponível, falha crítica.")
-            print("Contacte o suporte: erro f{e}")
+            print(f"Contacte o suporte: erro {e}")
 
     def user_importa_ficheiro(self) -> None:
         """User selecionou importar ficheiro"""
