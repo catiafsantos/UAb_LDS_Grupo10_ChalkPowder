@@ -113,7 +113,7 @@ def construir_interface_principal(root, grafico_var, estado_var, on_importar_fic
         root.destroy()
         return None
 
-# Método que constrói o formulário de parâmetros (tkinter). Funciona com o método mostra_formulario_parametros(self, colunas: list[str]).
+# Método que constrói o formulário de parâmetros (tkinter). Funciona com o método mostra_formulario_parametros no ficheiro view.py.
 def construir_formulario_parametros(
     parent: tk.Tk,
     colunas: list[str],
@@ -210,7 +210,7 @@ def construir_formulario_parametros(
 
     return form_frame
 
-# Método que obtém os parâmetros do formulário (tkinter). Funciona com o método __on_submeter_parametros(self).
+# Método que obtém os parâmetros do formulário (tkinter). Funciona com o método __on_submeter_parametros no ficheiro view.py.
 def obter_parametros_formulario(x_var, y_var, x_label_var, y_label_var, opcao_labels):
     if opcao_labels.get() == "usar_colunas":
         x_col, y_col = x_var.get(), y_var.get()
@@ -223,7 +223,7 @@ def obter_parametros_formulario(x_var, y_var, x_label_var, y_label_var, opcao_la
             return None, None, None, None, "Tem de preencher os nomes dos eixos."
         return None, None, x_label, y_label, None
 
-# Método que mostra o diálogo para carregar um ficheiro (Tkinter). Funciona com o método mostra_dlg_carregar_ficheiro(self)
+# Método que mostra o diálogo para carregar um ficheiro (Tkinter). Funciona com o método mostra_dlg_carregar_ficheiro no ficheiro view.py
 def carregar_ficheiro_csv_com_dialogo(btn_importar, mostra_mensagem_info, mostra_erro_importacao):
     mostra_mensagem_info("A iniciar importação de ficheiro...")
     btn_importar.config(state="disabled", text="A carregar...", cursor="watch")
@@ -246,3 +246,23 @@ def carregar_ficheiro_csv_com_dialogo(btn_importar, mostra_mensagem_info, mostra
         return None
     finally:
         btn_importar.config(state="normal", text="Importar Ficheiro", cursor="hand2")
+
+# Método que mostra ao utilizador as opções de gravação do ficheiro (tkinter). Funciona com o método mostra_dlg_grava_grafico no ficheiro view.py.
+def guardar_grafico_com_dialogo(callback_gravar, mostrar_info, voltar_menu):
+    path = filedialog.asksaveasfilename(
+        title="Guardar Gráfico Como",
+        defaultextension=".png",
+        filetypes=[
+            ("Imagem PNG", "*.png"),
+            ("Imagem JPEG", "*.jpg"),
+            ("Imagem SVG", "*.svg"),
+            ("Documento PDF", "*.pdf"),
+        ]
+    )
+
+    if path:
+        callback_gravar(path)
+        messagebox.showinfo("Sucesso", f"Gráfico guardado em:\n{path}")
+        voltar_menu()
+    else:
+        mostrar_info("Operação de gravação cancelada.")
