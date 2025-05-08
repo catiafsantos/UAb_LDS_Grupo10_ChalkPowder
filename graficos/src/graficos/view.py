@@ -202,23 +202,12 @@ class View(tk.Tk):
             self.notifica_ficheiro_selecionado(path)
 
     # Método que mostra ao utilizador as opções de gravação do ficheiro
-    def mostra_dlg_grava_grafico(self):
-        path = filedialog.asksaveasfilename(
-            title="Guardar Gráfico Como",
-            defaultextension=".png",
-            filetypes=[
-                ("Imagem PNG", "*.png"),
-                ("Imagem JPEG", "*.jpg"),
-                ("Imagem SVG", "*.svg"),
-                ("Documento PDF", "*.pdf"),
-            ]
+   def mostra_dlg_grava_grafico(self) -> None:
+        guardar_grafico_com_dialogo(
+            callback_gravar=self.__grava_grafico_click_evt.invoke,
+            mostrar_info=self.mostra_mensagem_info,
+            voltar_menu=self.voltar_menu_inicial
         )
-        if path:
-            self.__grava_grafico_click_evt.invoke(path)
-            messagebox.showinfo("Sucesso", f"Gráfico guardado em:\n{path}")
-            self.voltar_menu_inicial()
-        else:
-            self.mostra_mensagem_info("Operação de gravação cancelada.")
         
     # Outros
     def notifica_ficheiro_selecionado(self, fullpath: str):
