@@ -174,20 +174,16 @@ class View(tk.Tk):
         self.mostra_mensagem_info("A validar os parâmetros...")
         self.update_idletasks()
 
-        if self.opcao_labels.get() == "usar_colunas":
-            x_col, y_col = self.x_var.get(), self.y_var.get()
-            if x_col == "Escolher coluna X" or y_col == "Escolher coluna Y":
-                self.mostra_erro_ficheiro("Tem de selecionar colunas para os eixos.")
-                self.mostra_mensagem_info("Faltam selecionar colunas.")
-                return
-            x_label, y_label = x_col, y_col
-        else:
-            x_col, y_col = None, None
-            x_label, y_label = self.x_label_var.get().strip(), self.y_label_var.get().strip()
-            if not x_label or not y_label:
-                self.mostra_erro_ficheiro("Tem de preencher os nomes dos eixos.")
-                self.mostra_mensagem_info("Faltam nomes personalizados.")
-                return
+        # Obtém os parâmetros preenchidos no formulário
+        x_col, y_col, x_label, y_label, erro = obter_parametros_formulario(
+            self.x_var, self.y_var, self.x_label_var, self.y_label_var, self.opcao_labels
+        )
+
+        # Verifica se houve algum erro durante a validação
+        if erro:
+            self.mostra_erro_ficheiro(erro)
+            self.mostra_mensagem_info(erro)
+            return
                 
         self.mostra_mensagem_info("Parâmetros corretos. A gerar gráfico...")
         self.__submissao_parametros_evt.invoke(x_col, y_col, x_label, y_label)
