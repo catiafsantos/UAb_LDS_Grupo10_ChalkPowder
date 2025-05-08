@@ -222,3 +222,27 @@ def obter_parametros_formulario(x_var, y_var, x_label_var, y_label_var, opcao_la
         if not x_label or not y_label:
             return None, None, None, None, "Tem de preencher os nomes dos eixos."
         return None, None, x_label, y_label, None
+
+# Método que mostra o diálogo para carregar um ficheiro (Tkinter). Funciona com o método mostra_dlg_carregar_ficheiro(self)
+def carregar_ficheiro_csv_com_dialogo(btn_importar, mostra_mensagem_info, mostra_erro_importacao):
+    mostra_mensagem_info("A iniciar importação de ficheiro...")
+    btn_importar.config(state="disabled", text="A carregar...", cursor="watch")
+    btn_importar.update_idletasks() # Atualiza o GUI imediatamente
+
+    try:
+        path = filedialog.askopenfilename(
+            title="Selecionar ficheiro CSV",
+            filetypes=[("Ficheiros CSV", "*.csv"), ("Todos os ficheiros", "*.*")]
+        )
+        if not path:
+            mostra_mensagem_info("Importação cancelada pelo utilizador.")
+            return None
+        return path
+    except Exception as e:
+        stack = traceback.format_exc()
+        print(stack)
+        mostra_mensagem_info("Erro ao selecionar ficheiro.")
+        mostra_erro_importacao(f"Ocorreu um erro ao selecionar o ficheiro: {str(e)}")
+        return None
+    finally:
+        btn_importar.config(state="normal", text="Importar Ficheiro", cursor="hand2")
