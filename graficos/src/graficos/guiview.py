@@ -112,3 +112,100 @@ def construir_interface_principal(root, grafico_var, estado_var, on_importar_fic
         messagebox.showerror("Erro Crítico", f"Ocorreu um erro ao iniciar a interface: {str(e)}")
         root.destroy()
         return None
+
+# Método que constrói o formulário de parâmetros (tkinter). Funciona com o método mostra_formulario_parametros(self, colunas: list[str]).
+def construir_formulario_parametros(
+    parent: tk.Tk,
+    colunas: list[str],
+    x_var: tk.StringVar,
+    y_var: tk.StringVar,
+    x_label_var: tk.StringVar,
+    y_label_var: tk.StringVar,
+    opcao_labels: tk.StringVar,
+    on_submeter_parametros
+) -> tk.Frame:
+    
+    #Frame do formulário
+    form_frame = tk.Frame(parent, bg="white")
+    form_frame.place(relx=0.5, rely=0.5, anchor="center")
+
+    # Funções de atualização do dropdown
+    def atualizar_dropdown_y(_=None):
+        coluna_x = x_var.get()
+        novas_opcoes_y = [col for col in colunas if col != coluna_x]
+        dropdown_y['values'] = novas_opcoes_y
+        if y_var.get() == coluna_x:
+            y_var.set("Escolher coluna Y")
+
+    def atualizar_dropdown_x(_=None):
+        coluna_y = y_var.get()
+        novas_opcoes_x = [col for col in colunas if col != coluna_y]
+        dropdown_x['values'] = novas_opcoes_x
+        if x_var.get() == coluna_y:
+            x_var.set("Escolher coluna X")
+
+    # Método que atualiza a visibilidade dos labels
+    def atualizar_visibilidade_labels():
+        if opcao_labels.get() == "personalizar":
+            # Mostrar caixas de texto personalizadas
+            label_x_entry.grid(row=2, column=0, sticky="e", padx=(10, 5), pady=5)
+            entry_x_label.grid(row=2, column=1, sticky="w", padx=(5, 10), pady=5)
+
+            label_y_entry.grid(row=3, column=0, sticky="e", padx=(10, 5), pady=5)
+            entry_y_label.grid(row=3, column=1, sticky="w", padx=(5, 10), pady=5)
+
+            dropdown_x.grid_remove()
+            dropdown_y.grid_remove()
+        else:
+            # Mostrar dropdowns de colunas
+            dropdown_x.grid(row=2, column=0, columnspan=2, padx=10, pady=5)
+            dropdown_y.grid(row=3, column=0, columnspan=2, padx=10, pady=5)
+
+            label_x_entry.grid_remove()
+            label_y_entry.grid_remove()
+            entry_x_label.grid_remove()
+            entry_y_label.grid_remove()
+
+    # Opções de labels
+    tk.Radiobutton(
+        form_frame, text="Usar nomes das colunas como rótulos dos eixos",
+        variable=opcao_labels, value="usar_colunas",
+        command=atualizar_visibilidade_labels, bg="white"
+    ).grid(row=0, column=0, columnspan=2, pady=(0, 10), sticky="w")
+
+    tk.Radiobutton(
+        form_frame, text="Personalizar nomes dos eixos",
+        variable=opcao_labels, value="personalizar",
+        command=atualizar_visibilidade_labels, bg="white"
+    ).grid(row=1, column=0, columnspan=2, pady=(0, 20), sticky="w")
+
+    # Dropdowns para escolha de colunas
+    dropdown_x = ttk.Combobox(form_frame, textvariable=x_var, values=colunas, state="readonly", width=30)
+    dropdown_y = ttk.Combobox(form_frame, textvariable=y_var, values=colunas, state="readonly", width=30)
+    dropdown_x.grid(row=2, column=0, columnspan=2, pady=5)
+    dropdown_y.grid(row=3, column=0, columnspan=2, pady=5)
+
+    dropdown_x.bind("<<ComboboxSelected>>", atualizar_dropdown_y)
+    dropdown_y.bind("<<ComboboxSelected>>", atualizar_dropdown_x)
+
+    # Entradas de texto para personalizar labels
+    style = ttk.Style()
+    style.configure("Custom.TEntry", foreground="#1E3A5F", font=("Helvetica", 11),
+                    padding=10, relief="solid", borderwidth=1, background="white")
+
+    entry_x_label = ttk.Entry(form_frame, textvariable=x_label_var, style="Custom.TEntry", width=30)
+    entry_y_label = ttk.Entry(form_frame, textvariable=y_label_var, style="Custom.TEntry", width=30)
+
+    label_x_entry = tk.Label(form_frame, text="Eixo X", bg="white", font=("Helvetica", 10))
+    label_y_entry = tk.Label(form_frame, text="Eixo Y", bg="white", font=("Helvetica", 10))
+
+    # Botão Submeter
+    tk.Button(
+        form_frame, text="Submeter", command=on_submeter_parametros,
+        font=("Helvetica", 11), bg="#1E3A5F", fg="white"
+    ).grid(row=5, column=0, columnspan=2, pady=20)
+
+    # Inicializa visibilidade correta
+    atualizar_visibilidade_labels()
+
+    return form_frame
