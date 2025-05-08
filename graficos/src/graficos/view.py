@@ -2,6 +2,7 @@ from typing import Callable, List
 import tkinter as tk
 from tkinter import messagebox
 
+from graficos.viewinterface import IUserView
 from graficos.eventos import Event
 from graficos.guiview import (
     construir_interface_principal, construir_formulario_parametros,
@@ -74,7 +75,7 @@ class ErroInternoEvt(Event):
         super().invoke(stacktrace)
 
 
-class View(tk.Tk):
+class View(tk.Tk, IUserView):
     def __init__(self) -> None:
         super().__init__()
         # Eventos expostos pela view
