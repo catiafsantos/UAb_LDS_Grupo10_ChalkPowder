@@ -2,7 +2,7 @@ from typing import Callable, List
 import tkinter as tk
 from tkinter import messagebox
 
-from graficos.viewinterface import IUserView
+from graficos.IUserView import IUserView
 from graficos.eventos import Event
 from graficos.guiview import (
     construir_interface_principal, construir_formulario_parametros,
