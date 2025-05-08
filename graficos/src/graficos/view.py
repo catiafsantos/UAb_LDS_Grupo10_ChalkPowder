@@ -236,29 +236,8 @@ class View(tk.Tk):
         ) 
 
     # Método para mostrar o gráfico
-    def mostrar_grafico(self):
-        # Esconde todos os elementos anteriores da interface
-        if hasattr(self, "form_frame") and self.form_frame.winfo_exists():
-            self.form_frame.destroy()
-        if hasattr(self, "dropdown_menu") and self.dropdown_menu.winfo_exists():
-            self.dropdown_menu.place_forget()
-        if hasattr(self, "btn_importar") and self.btn_importar.winfo_exists():
-            self.btn_importar.place_forget()
-
-        # Frame para botão de guardar
-        self.botao_frame = tk.Frame(self, bg="white")
-        self.botao_frame.place(relx=0.5, rely=0.5, anchor="center")
-
-        self.btn_guardar_grafico = tk.Button(
-            self.botao_frame, text="Guardar Gráfico",
-            command=self.__on_guardar_grafico_click,
-            font=("Helvetica", 11), bg="#1E3A5F", fg="white"
-        )
-        self.btn_guardar_grafico.pack(pady=10)
-
-        self.mostra_mensagem_info("Gráfico gerado.")
-        # Mostra o gráfico
-        plt.show()
+    def mostrar_grafico(self, __: List[str] = []) -> None:
+        preparar_interface_grafico(self, self.__on_guardar_grafico_click)
 
     # Método que permite voltar ao menu inicial
     def voltar_menu_inicial(self):
