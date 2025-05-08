@@ -1,10 +1,14 @@
 from typing import Callable, List
 import tkinter as tk
-from tkinter import filedialog, messagebox, ttk
-
-import matplotlib.pyplot as plt
+from tkinter import messagebox
 
 from graficos.eventos import Event
+from graficos.guiview import (
+    construir_interface_principal, construir_formulario_parametros,
+    obter_parametros_formulario, carregar_ficheiro_csv_com_dialogo,
+    guardar_grafico_com_dialogo, preparar_interface_grafico,
+    voltar_menu_inicial_interface
+)
 
 
 # Eventos da View
@@ -240,16 +244,7 @@ class View(tk.Tk):
         preparar_interface_grafico(self, self.__on_guardar_grafico_click)
 
     # Método que permite voltar ao menu inicial
-    def voltar_menu_inicial(self):
-        """Reiniciar a interface para importar novo ficheiro."""
-        if hasattr(self, "form_frame") and self.form_frame.winfo_exists():
-            self.form_frame.destroy()
-        if hasattr(self, "dropdown_menu") and self.dropdown_menu.winfo_exists():
-            self.dropdown_menu.place_forget()
-        if hasattr(self, "botao_frame") and self.botao_frame.winfo_exists():
-            self.botao_frame.destroy()
-
-        if hasattr(self, "btn_importar"):
-            self.btn_importar.place(relx=0.5, rely=0.4, anchor="center")
+    def voltar_menu_inicial(self) -> None:
+        voltar_menu_inicial_interface(self)
 
         self.mostra_mensagem_info("Pronto para importar um novo ficheiro.")
