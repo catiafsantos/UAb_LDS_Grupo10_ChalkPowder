@@ -209,3 +209,16 @@ def construir_formulario_parametros(
     atualizar_visibilidade_labels()
 
     return form_frame
+
+# Método que obtém os parâmetros do formulário (tkinter). Funciona com o método __on_submeter_parametros(self).
+def obter_parametros_formulario(x_var, y_var, x_label_var, y_label_var, opcao_labels):
+    if opcao_labels.get() == "usar_colunas":
+        x_col, y_col = x_var.get(), y_var.get()
+        if x_col == "Escolher coluna X" or y_col == "Escolher coluna Y":
+            return None, None, None, None, "Tem de selecionar colunas para os eixos."
+        return x_col, y_col, x_col, y_col, None
+    else:
+        x_label, y_label = x_label_var.get().strip(), y_label_var.get().strip()
+        if not x_label or not y_label:
+            return None, None, None, None, "Tem de preencher os nomes dos eixos."
+        return None, None, x_label, y_label, None
