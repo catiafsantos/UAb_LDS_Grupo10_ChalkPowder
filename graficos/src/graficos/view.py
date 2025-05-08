@@ -79,7 +79,7 @@ class View(tk.Tk, IUserView):
     def __init__(self) -> None:
         super().__init__()
         # Eventos expostos pela view
-        self.importar_ficheiro_click_evt: ImportarFicheiroClickEvt = ImportarFicheiroClickEvt()
+        self.__importar_ficheiro_click_evt: ImportarFicheiroClickEvt = ImportarFicheiroClickEvt()
         self.__ficheiro_selecionado_evt: FicheiroSelecionadoClickEvt = FicheiroSelecionadoClickEvt()
         self.__grafico_selecionado_click_evt : GraficoSelecionadoClickEvt = GraficoSelecionadoClickEvt()
         self.__submissao_parametros_evt = SubmissaoParametrosEvt()
@@ -193,6 +193,11 @@ class View(tk.Tk, IUserView):
         self.mostra_mensagem_info("Parâmetros corretos. A gerar gráfico...")
         self.__submissao_parametros_evt.invoke(x_col, y_col, x_label, y_label)
 
+    def __on_home_click(self):
+        """Callback para voltar ao menu inicial quando o botão Home é clicado."""
+        self.mostra_mensagem_info("A voltar ao menu principal...")
+        voltar_menu_inicial_interface(self)
+
     # Dialogs
     def mostra_dlg_carregar_ficheiro(self) -> None:
         # Método que mostra o diálogo para carregar um ficheiro 
@@ -207,7 +212,7 @@ class View(tk.Tk, IUserView):
             self.notifica_ficheiro_selecionado(path)
 
     # Método que mostra ao utilizador as opções de gravação do ficheiro
-   def mostra_dlg_grava_grafico(self) -> None:
+    def mostra_dlg_grava_grafico(self) -> None:
         guardar_grafico_com_dialogo(
             callback_gravar=self.__grava_grafico_click_evt.invoke,
             mostrar_info=self.mostra_mensagem_info,
