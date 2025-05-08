@@ -290,7 +290,7 @@ def preparar_interface_grafico(view, on_guardar_click):
 
     view.mostra_mensagem_info("Gráfico gerado.")
     # Mostra o gráfico
-    plt.show()
+    plt.show(block=False)
 
 # Método que permite voltar ao menu inicial (tkinter). Funciona com o método voltar_menu_inicial(self).
 def voltar_menu_inicial_interface(view):
@@ -304,3 +304,5 @@ def voltar_menu_inicial_interface(view):
 
     if hasattr(view, "btn_importar"):
         view.btn_importar.place(relx=0.5, rely=0.4, anchor="center")
+
+    plt.close("all")
