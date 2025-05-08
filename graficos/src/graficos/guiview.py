@@ -291,3 +291,16 @@ def preparar_interface_grafico(view, on_guardar_click):
     view.mostra_mensagem_info("Gráfico gerado.")
     # Mostra o gráfico
     plt.show()
+
+# Método que permite voltar ao menu inicial (tkinter). Funciona com o método voltar_menu_inicial(self).
+def voltar_menu_inicial_interface(view):
+    """Reinicia a interface para permitir nova importação de ficheiro."""
+    if hasattr(view, "form_frame") and view.form_frame.winfo_exists():
+        view.form_frame.destroy()
+    if hasattr(view, "dropdown_menu") and view.dropdown_menu.winfo_exists():
+        view.dropdown_menu.place_forget()
+    if hasattr(view, "botao_frame") and view.botao_frame.winfo_exists():
+        view.botao_frame.destroy()
+
+    if hasattr(view, "btn_importar"):
+        view.btn_importar.place(relx=0.5, rely=0.4, anchor="center")
