@@ -266,3 +266,28 @@ def guardar_grafico_com_dialogo(callback_gravar, mostrar_info, voltar_menu):
         voltar_menu()
     else:
         mostrar_info("Operação de gravação cancelada.")
+
+# Método para mostrar gráfico (tkinter). Funciona com o método mostrar_grafico(self)
+def preparar_interface_grafico(view, on_guardar_click):
+    # Esconde todos os elementos anteriores da interface
+    if hasattr(view, "form_frame") and view.form_frame.winfo_exists():
+        view.form_frame.destroy()
+    if hasattr(view, "dropdown_menu") and view.dropdown_menu.winfo_exists():
+        view.dropdown_menu.place_forget()
+    if hasattr(view, "btn_importar") and view.btn_importar.winfo_exists():
+        view.btn_importar.place_forget()
+
+    # Frame para botão de guardar
+    view.botao_frame = tk.Frame(view, bg="white")
+    view.botao_frame.place(relx=0.5, rely=0.5, anchor="center")
+
+    view.btn_guardar_grafico = tk.Button(
+        view.botao_frame, text="Guardar Gráfico",
+        command=on_guardar_click,
+        font=("Helvetica", 11), bg="#1E3A5F", fg="white"
+    )
+    view.btn_guardar_grafico.pack(pady=10)
+
+    view.mostra_mensagem_info("Gráfico gerado.")
+    # Mostra o gráfico
+    plt.show()
