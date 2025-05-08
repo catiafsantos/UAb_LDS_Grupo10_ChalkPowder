@@ -189,28 +189,17 @@ class View(tk.Tk):
         self.__submissao_parametros_evt.invoke(x_col, y_col, x_label, y_label)
 
     # Dialogs
-    def mostra_dlg_carregar_ficheiro(self):
+    def mostra_dlg_carregar_ficheiro(self) -> None:
         # Método que mostra o diálogo para carregar um ficheiro 
-        self.mostra_mensagem_info("A iniciar importação de ficheiro...")
-        self.btn_importar.config(state="disabled", text="A carregar...", cursor="watch")
-        self.update_idletasks()  # Atualiza o GUI imediatamente
+        path = carregar_ficheiro_csv_com_dialogo(
+            self.btn_importar,
+            self.mostra_mensagem_info,
+            self.mostra_erro_importacao
+        )
 
-        try:
-            path = filedialog.askopenfilename(
-                title="Selecionar ficheiro CSV",
-                filetypes=[("Ficheiros CSV", "*.csv"), ("Todos os ficheiros", "*.*")]
-            )
-            if path:
-                self.notifica_ficheiro_selecionado(path)
-            else:
-                self.mostra_mensagem_info("Importação cancelada pelo utilizador.")
-        except Exception as e:
-            stack = traceback.format_exc()
-            print(stack)
-            self.mostra_mensagem_info("Erro ao selecionar ficheiro.")
-            self.mostra_erro_importacao(f"Ocorreu um erro ao selecionar o ficheiro: {str(e)}")
-        finally:
-            self.btn_importar.config(state="normal", text="Importar Ficheiro", cursor="hand2")
+        # Verifica se um caminho foi retornado pelo diálogo
+        if path:
+            self.notifica_ficheiro_selecionado(path)
 
     # Método que mostra ao utilizador as opções de gravação do ficheiro
     def mostra_dlg_grava_grafico(self):
