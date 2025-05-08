@@ -215,7 +215,7 @@ class View(tk.Tk):
         self.__ficheiro_selecionado_evt.invoke(fullpath)
 
     # Método que mostra o formulário com os vários parâmetros
-    def mostra_formulario_parametros(self, colunas: list[str]):
+    def mostra_formulario_parametros(self, colunas: list[str]) -> None:
         # Inicializar variáveis e opções
         self.x_var = tk.StringVar(value="Escolher coluna X")
         self.y_var = tk.StringVar(value="Escolher coluna Y")
@@ -223,73 +223,17 @@ class View(tk.Tk):
         self.y_label_var = tk.StringVar(value="")
         self.opcao_labels = tk.StringVar(value="usar_colunas")
 
-        # Frame do formulário
-        self.form_frame = tk.Frame(self, bg="white")
-        self.form_frame.place(relx=0.5, rely=0.5, anchor="center")
-
-        # Opções de labels
-        self.rb_usar_colunas = tk.Radiobutton(
-            self.form_frame, text="Usar nomes das colunas como rótulos dos eixos",
-            variable=self.opcao_labels, value="usar_colunas",
-            command=self.__atualizar_visibilidade_labels, bg="white"
-        )
-        self.rb_usar_colunas.grid(row=0, column=0, columnspan=2, pady=(0, 10), sticky="w")
-
-        self.rb_personalizar = tk.Radiobutton(
-            self.form_frame, text="Personalizar nomes dos eixos",
-            variable=self.opcao_labels, value="personalizar",
-            command=self.__atualizar_visibilidade_labels, bg="white"
-        )
-        self.rb_personalizar.grid(row=1, column=0, columnspan=2, pady=(0, 20), sticky="w")
-
-        # Dropdowns para escolha de colunas
-        self.dropdown_x = ttk.Combobox(self.form_frame, textvariable=self.x_var, values=colunas, state="readonly", width=30)
-        self.dropdown_y = ttk.Combobox(self.form_frame, textvariable=self.y_var, values=colunas, state="readonly", width=30)
-        self.dropdown_x.grid(row=2, column=0, columnspan=2, pady=5)
-        self.dropdown_y.grid(row=3, column=0, columnspan=2, pady=5)
-
-        # Entradas de texto para personalizar labels
-        style = ttk.Style()
-        style.configure("Custom.TEntry", foreground="#1E3A5F", font=("Helvetica", 11),
-                        padding=10, relief="solid", borderwidth=1, background="white")
-
-        self.entry_x_label = ttk.Entry(self.form_frame, textvariable=self.x_label_var, style="Custom.TEntry", width=30)
-        self.entry_y_label = ttk.Entry(self.form_frame, textvariable=self.y_label_var, style="Custom.TEntry", width=30)
-
-        self.label_x_entry = tk.Label(self.form_frame, text="Eixo X", bg="white", font=("Helvetica", 10))
-        self.label_y_entry = tk.Label(self.form_frame, text="Eixo Y", bg="white", font=("Helvetica", 10))
-
-        # Botão Submeter
-        self.btn_submeter = tk.Button(
-            self.form_frame, text="Submeter",
-            command=self.__on_submeter_parametros,
-            font=("Helvetica", 11), bg="#1E3A5F", fg="white"
-        )
-        self.btn_submeter.grid(row=5, column=0, columnspan=2, pady=20)
-
-        self.__atualizar_visibilidade_labels() 
-
-    # Método que atualiza a visibilidade dos labels
-    def __atualizar_visibilidade_labels(self):
-        if self.opcao_labels.get() == "personalizar":
-            # Mostrar caixas de texto personalizadas
-            self.label_x_entry.grid(row=2, column=0, sticky="e", padx=(10, 5), pady=5)
-            self.entry_x_label.grid(row=2, column=1, sticky="w", padx=(5, 10), pady=5)
-
-            self.label_y_entry.grid(row=3, column=0, sticky="e", padx=(10, 5), pady=5)
-            self.entry_y_label.grid(row=3, column=1, sticky="w", padx=(5, 10), pady=5)
-
-            self.dropdown_x.grid_remove()
-            self.dropdown_y.grid_remove()
-        else:
-            # Mostrar dropdowns de colunas
-            self.dropdown_x.grid(row=2, column=0, columnspan=2, padx=10, pady=5)
-            self.dropdown_y.grid(row=3, column=0, columnspan=2, padx=10, pady=5)
-
-            self.label_x_entry.grid_remove()
-            self.label_y_entry.grid_remove()
-            self.entry_x_label.grid_remove()
-            self.entry_y_label.grid_remove()
+        # Constrói o formulário
+        self.form_frame = construir_formulario_parametros(
+            parent=self,
+            colunas=colunas,
+            x_var=self.x_var,
+            y_var=self.y_var,
+            x_label_var=self.x_label_var,
+            y_label_var=self.y_label_var,
+            opcao_labels=self.opcao_labels,
+            on_submeter_parametros=self.__on_submeter_parametros
+        ) 
 
     # Método para mostrar o gráfico
     def mostrar_grafico(self):
