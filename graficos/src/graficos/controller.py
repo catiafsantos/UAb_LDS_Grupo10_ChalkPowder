@@ -1,7 +1,7 @@
 from typing import Callable
 
 from graficos.eventos import Event
-from graficos.view import View
+from graficos.IUserView import IUserView
 from graficos.model import Model
 
 
@@ -43,8 +43,9 @@ class GravaGraficoEvt(Event):
 
 
 class Controller:
-    def __init__(self) -> None:
-        self.view = view = View()
+    def __init__(self, View: Callable[[], IUserView]) -> None:
+        self.view = View()
+        view = self.view
         self.model = model = Model(view)
 
         # Definição de eventos do Controller
