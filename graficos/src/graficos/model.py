@@ -1,5 +1,6 @@
 from typing import List, Dict, Any, Callable, Optional
-from graficos.eventos import Event
+from graficos.controllerEvent import ControllerEvent
+from graficos.IUserView import IUserView 
 
 import pandas as pd
 import seaborn as sns
@@ -11,7 +12,7 @@ import os
 # Eventos Utilizados pelo Model
 # =============================================================================
 
-class FicheiroInvalidoEvt(Event):
+class FicheiroInvalidoEvt(ControllerEvent):
     """
     Evento emitido quando ocorre algum erro relacionado com o ficheiro.
     Os handlers subscritos recebem uma mensagem (string) a explicar o erro.
@@ -21,7 +22,7 @@ class FicheiroInvalidoEvt(Event):
     def invoke(self, mensagem: str) -> None:
         super().invoke(mensagem)
 
-class EstadoProcessamentoEvt(Event):
+class EstadoProcessamentoEvt(ControllerEvent):
     """
     Evento para notificar alterações no estado do processamento.
     Ex.: "Início da importação", "Processamento concluído", "Gravação concluída", etc.
@@ -31,7 +32,7 @@ class EstadoProcessamentoEvt(Event):
     def invoke(self, estado: str) -> None:
         super().invoke(estado)
 
-class ImportacaoConcluidaEvt(Event):
+class ImportacaoConcluidaEvt(ControllerEvent):
     """
     Evento para notificar que a importação foi concluída com sucesso.
     (Sem argumentos)
@@ -41,7 +42,7 @@ class ImportacaoConcluidaEvt(Event):
     def invoke(self) -> None:
         super().invoke()
 
-class GraficoGravadoEvt(Event):
+class GraficoGravadoEvt(ControllerEvent):
     """
     Evento para notificar que a gravação do gráfico foi concluída com sucesso.
     (Sem argumentos)
@@ -51,7 +52,7 @@ class GraficoGravadoEvt(Event):
     def invoke(self) -> None:
         super().invoke()
 
-class GraficoDisponivelEvt(Event):
+class GraficoDisponivelEvt(ControllerEvent):
     """
     Evento para notificar que existem gráficos disponíveis após a importação.
     Os handlers recebem a lista de gráficos.
@@ -61,7 +62,7 @@ class GraficoDisponivelEvt(Event):
     def invoke(self, lista_graficos: List[str]) -> None:
         super().invoke(lista_graficos)
 
-class GraficoGeradoEvt(Event):
+class GraficoGeradoEvt(ControllerEvent):
     """
     Evento emitido quando o gráfico está gerado e pronto para ser mostrado.
     Os handlers recebem uma lista de strings com os gráficos disponíveis.
@@ -72,7 +73,7 @@ class GraficoGeradoEvt(Event):
         super().invoke()
 
 # --- Novos eventos para diferenciar os tipos de falha ---
-class FalhaImportacaoEvt(Event):
+class FalhaImportacaoEvt(ControllerEvent):
     """
     Evento para notificar que ocorreu uma falha de importação (dados/ficheiro).
     Os handlers recebem uma mensagem específica de falha de importação.
@@ -82,7 +83,7 @@ class FalhaImportacaoEvt(Event):
     def invoke(self, mensagem: str) -> None:
         super().invoke(mensagem)
 
-class FalhaGravacaoEvt(Event):
+class FalhaGravacaoEvt(ControllerEvent):
     """
     Evento para notificar que ocorreu uma falha na gravação do gráfico.
     Os handlers recebem uma mensagem específica de falha na gravação.
@@ -92,7 +93,7 @@ class FalhaGravacaoEvt(Event):
     def invoke(self, mensagem: str) -> None:
         super().invoke(mensagem)
 
-class FalhaGeracaoEvt(Event):
+class FalhaGeracaoEvt(ControllerEvent):
     """
     Evento para notificar que ocorreu uma falha durante a geração do gráfico.
     Os handlers recebem uma mensagem específica de falha de geração.
@@ -103,7 +104,7 @@ class FalhaGeracaoEvt(Event):
         super().invoke(mensagem)
 
 # --- Para simular o Throw do C# ---
-class ErroInternoEvt(Event):
+class ErroInternoEvt(ControllerEvent):
     """
     Evento para notificar erros internos com stack trace.
     A View pode decidir se quer mostrar esta mensagem ou apenas guardar.
@@ -118,7 +119,7 @@ class ErroInternoEvt(Event):
 # =============================================================================
 
 class Model:
-    def __init__(self, view) -> None:  
+    def __init__(self, view: IUserView) -> None: 
         self.view = view
         self.dados: List[Dict[str, Any]] = []   # Armazena os dados importados
         self.graficos: List[str] = []             # Lista de gráficos gerados

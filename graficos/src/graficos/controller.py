@@ -1,18 +1,18 @@
 from typing import Callable
 
-from graficos.eventos import Event
+from graficos.controllerEvent import ControllerEvent
 from graficos.IUserView import IUserView
 from graficos.model import Model
 
 
-class MostraDlgCarregarFicheiroEvt(Event):
+class MostraDlgCarregarFicheiroEvt(ControllerEvent):
     """Evento emitido pelo Controller para informar a View que deve obter do user 
     um ficheiro de dados."""
     def invoke(self) -> None:
         super().invoke()
 
 
-class ImportarFicheiroEvt(Event):
+class ImportarFicheiroEvt(ControllerEvent):
     """Evento emitido pelo Controller para informar o Model que o ficheiro de dados 
     selecionado pelo user está disponível para ser importado.
     """
@@ -23,7 +23,7 @@ class ImportarFicheiroEvt(Event):
         super().invoke(caminho)
 
 
-class MostraDlgGravaGraficoEvt(Event):
+class MostraDlgGravaGraficoEvt(ControllerEvent):
     """Evento emitido pelo Controller para informar a View que deve mostrar ao User
     o diálogo de gravação.
     """
@@ -31,7 +31,7 @@ class MostraDlgGravaGraficoEvt(Event):
         super().invoke()
 
 
-class GravaGraficoEvt(Event):
+class GravaGraficoEvt(ControllerEvent):
     """Evento emitido pelo Controller para informar o Model que deve gravar o gráfico 
     e em que localização do filesystem e com que nome gravá-lo.
     """

@@ -3,7 +3,7 @@ import tkinter as tk
 from tkinter import messagebox
 
 from graficos.IUserView import IUserView
-from graficos.eventos import Event
+from graficos.controllerEvent import ControllerEvent
 from graficos.guiview import (
     construir_interface_principal, construir_formulario_parametros,
     obter_parametros_formulario, carregar_ficheiro_csv_com_dialogo,
@@ -13,13 +13,13 @@ from graficos.guiview import (
 
 
 # Eventos da View
-class ImportarFicheiroClickEvt(Event):
+class ImportarFicheiroClickEvt(ControllerEvent):
     """Evento emitido pela View quando o User selecciona importar ficheiro."""
     def invoke(self) -> None:
         super().invoke()
 
 
-class FicheiroSelecionadoClickEvt(Event):
+class FicheiroSelecionadoClickEvt(ControllerEvent):
     """Evento emitido pela View quando o User seleccionou um ficheiro do file system.
 
     Quando invocado este evento passa a fullpath do ficheiro seleccionado para o subscritor.
@@ -29,7 +29,7 @@ class FicheiroSelecionadoClickEvt(Event):
         return super().add_handler(handler)
 
 
-class GraficoSelecionadoClickEvt(Event):
+class GraficoSelecionadoClickEvt(ControllerEvent):
     """Evento emitido pela View quando o User escolhe um tipo de gráfico.
     """
     def add_handler(self, handler: Callable[[str], None]):
@@ -39,7 +39,7 @@ class GraficoSelecionadoClickEvt(Event):
         super().invoke(grafico_selecionado)
 
 
-class SubmissaoParametrosEvt(Event):
+class SubmissaoParametrosEvt(ControllerEvent):
     """Emitido quando o utilizador submete os parâmetros para construir o gráfico."""
     def add_handler(self, handler: Callable[[str, str, str, str], None]):
         super().add_handler(handler)
@@ -48,7 +48,7 @@ class SubmissaoParametrosEvt(Event):
         super().invoke(x_col, y_col, x_label, y_label)
 
 
-class SolicitaGuardarGraficoClickEvt(Event):
+class SolicitaGuardarGraficoClickEvt(ControllerEvent):
     """Evento emitido pela View quando o User seleciona opção de gravar
     "Guardar Gráfico"
     """
@@ -56,7 +56,7 @@ class SolicitaGuardarGraficoClickEvt(Event):
         super().invoke()
 
 
-class GravaGraficoClickEvt(Event):
+class GravaGraficoClickEvt(ControllerEvent):
     """Evento emitido pela View quando o User gravar o gráfico num diálogo de 
     gravação de ficheiros.
     """
@@ -67,7 +67,7 @@ class GravaGraficoClickEvt(Event):
         super().invoke(caminho)
 
 # Simula o Throw do C#
-class ErroInternoEvt(Event):
+class ErroInternoEvt(ControllerEvent):
     """Emitido quando ocorre um erro interno no sistema."""
     def add_handler(self, handler: Callable[[str], None]) -> None:
         super().add_handler(handler)

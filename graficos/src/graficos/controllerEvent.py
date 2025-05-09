@@ -3,7 +3,7 @@
 from typing import Callable, Any
 
 
-class Event:
+class ControllerEvent:
     """Classe que representa um evento para subscrição.
 
     Esta classe pode ser instanciada na forma atual ou pode ser especializada de modo a 
