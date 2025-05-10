@@ -1,4 +1,5 @@
-from graficos.ILogger import ILogger
+from .ILogger import ILogger
+
 
 class ControllerConsoleLogger(ILogger):
     """Classe responsável por registar mensagens no terminal (stdout), usada pelo Controller.

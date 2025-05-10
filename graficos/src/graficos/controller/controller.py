@@ -1,8 +1,8 @@
 from typing import Callable
 
-from graficos.controllerEvent import ControllerEvent
-from graficos.controllerConsoleLogger import ControllerConsoleLogger
-from graficos.ILogger import ILogger
+from .controllerEvent import ControllerEvent
+from .controllerConsoleLogger import ControllerConsoleLogger
+from .ILogger import ILogger
 from graficos.IUserView import IUserView
 from graficos.model import Model
 
@@ -96,9 +96,12 @@ class Controller:
         self.__importar_ficheiro_evt.invoke(caminho)
 
     def user_selecionou_grafico(self, tipo: str):
+        # Estas verrugas (chamadas diretas a componentes) que não queria aqui 
         self.tipo_grafico = tipo
+        # esta devia ter ter um evt e um handler
         colunas = self.model.get_colunas_disponiveis()
         self.logger.log_info(f"user_selecionou_grafico() - Tipo de gráfico selecionado: {tipo}")
+        # e esta também
         self.view.mostra_formulario_parametros(colunas)
         self.logger.log_info(f"user_selecionou_grafico() - Colunas disponíveis: {colunas}")
 

@@ -1,5 +1,3 @@
-# Parte do componente controller 
-
 from typing import Callable, Any
 
 
