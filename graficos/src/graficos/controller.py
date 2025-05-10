@@ -1,10 +1,11 @@
 from typing import Callable
 
 from graficos.controllerEvent import ControllerEvent
-from graficos.IUserView import IUserView
-from graficos.model import Model
 from graficos.controllerConsoleLogger import ControllerConsoleLogger
 from graficos.ILogger import ILogger
+from graficos.IUserView import IUserView
+from graficos.model import Model
+
 
 class MostraDlgCarregarFicheiroEvt(ControllerEvent):
     """Evento emitido pelo Controller para informar a View que deve obter do user 
@@ -44,7 +45,7 @@ class GravaGraficoEvt(ControllerEvent):
 
 
 class Controller:
-    def __init__(self, View: Callable[[], IUserView]) -> None:
+    def __init__(self, View: Callable[[ILogger], IUserView]) -> None:
         
         #Instanciar o logger do Consoller
         self.logger: ILogger = ControllerConsoleLogger()
