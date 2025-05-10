@@ -1,6 +1,7 @@
 from typing import List, Dict, Any, Callable, Optional
 from graficos.controllerEvent import ControllerEvent
-from graficos.IUserView import IUserView 
+from graficos.IUserView import IUserView
+from graficos.ILogger import ILogger
 
 import pandas as pd
 import seaborn as sns
@@ -119,8 +120,9 @@ class ErroInternoEvt(ControllerEvent):
 # =============================================================================
 
 class Model:
-    def __init__(self, view: IUserView) -> None: 
+    def __init__(self, view: IUserView, logger: ILogger) -> None:
         self.view = view
+        self.logger = logger
         self.dados: List[Dict[str, Any]] = []   # Armazena os dados importados
         self.graficos: List[str] = []             # Lista de gráficos gerados
         self.__figura: Optional[plt.Figure] = None  # Figura gerada para posterior gravação
@@ -256,9 +258,11 @@ class Model:
         MAX_TAMANHO_MB = 10  # Tamanho máximo em MB
 
         self.mensagem_estado_processamento("Início da importação")
+        self.logger.log_info("importar_ficheiro() - Início da importação")
         try:
             if not caminho.endswith(".csv"):
                 self.__ficheiro_invalido_evt.invoke("Ficheiro selecionado não é CSV.")
+                self.logger.log_erro("importar_ficheiro() - Ficheiro não é CSV")
                 return
 
             # Validação do tamanho do ficheiro (em bytes)
@@ -267,9 +271,11 @@ class Model:
             # Verifica se o tamanho do ficheiro excede o máximo permitido
             if tamanho_mb > MAX_TAMANHO_MB:
                 self.__ficheiro_invalido_evt.invoke(f"O ficheiro excede o tamanho máximo de {MAX_TAMANHO_MB} MB.")
+                self.logger.log_erro(f"importar_ficheiro() - Ficheiro excede {MAX_TAMANHO_MB} MB")
                 return
 
             self.dados = pd.read_csv(caminho).to_dict(orient="records")
+            self.logger.log_info(f"importar_ficheiro() - {len(self.dados)} registos carregados do CSV")
 
             df = pd.DataFrame(self.dados)
 
@@ -277,10 +283,12 @@ class Model:
             # Neste momento está fixo porém podemos por a view a enviar esses valores.            
             if "Categoria" not in df.columns or "Valor" not in df.columns:
                 self.mensagem_falha_importacao("Ficheiro CSV mal formatado.")
+                self.logger.log_erro("importar_ficheiro() - Ficheiro CSV mal formatado (faltam colunas obrigatórias)")
                 return                        
             
             if not self.dados:
                 self.mensagem_falha_importacao("Ficheiro CSV está vazio.")
+                self.logger.log_erro("importar_ficheiro() - Ficheiro CSV está vazio")
                 return
 
             # Atualiza os gráficos disponíveis (exemplo fixo para já)
@@ -292,6 +300,7 @@ class Model:
         except pd.errors.EmptyDataError:
         # CSV completamente vazio: ficheiro vazio!
             self.mensagem_falha_importacao("Ficheiro CSV está vazio.")
+            self.logger.log_erro("importar_ficheiro() - Ficheiro CSV está vazio")
 
         except Exception as e:
             stacktrace = traceback.format_exc()
@@ -299,6 +308,7 @@ class Model:
             self.__erro_interno_evt.invoke(stacktrace)
             # 2. Evento funcional amigável (mensagem para a View)
             self.mensagem_falha_importacao(f"Erro ao importar: {str(e)}")
+            self.logger.log_erro(f"importar_ficheiro() - Erro inesperado: {str(e)}")
 
     def gerar_grafico(self, tipo: str, x: str, y: str, x_label: Optional[str] = "", y_label: Optional[str] = "", titulo: Optional[str] = "") -> None:
         """
@@ -306,9 +316,11 @@ class Model:
         Armazena internamente a figura para posterior gravação.
         """
         self.mensagem_estado_processamento("A gerar gráfico")
+        self.logger.log_info(f"gerar_grafico() - A gerar gráfico do tipo '{tipo}'")
         try:
             if not self.dados:
                 self.mensagem_falha_geracao("Não há dados para gerar gráfico.")
+                self.logger.log_erro("gerar_grafico() - Não há dados para gerar gráfico")
                 return
 
             df = pd.DataFrame(self.dados)
@@ -320,6 +332,7 @@ class Model:
                 sns.lineplot(x="Categoria", y="Valor", data=df)
             else:
                 self.mensagem_falha_geracao(f"Tipo de gráfico não suportado: {tipo}")
+                self.logger.log_erro(f"gerar_grafico() - Tipo de gráfico não suportado: {tipo}")
                 return
 
             # Adiciona labels e título
@@ -330,6 +343,7 @@ class Model:
             self.__figura = plt.gcf()
 
             self.mensagem_estado_processamento("Gráfico gerado com sucesso")
+            self.logger.log_info("gerar_grafico() - Gráfico gerado com sucesso")
             self.__grafico_gerado_evt.invoke()
             self.mensagem_estado_processamento("Gráfico pronto para visualização")  
 
@@ -340,6 +354,7 @@ class Model:
             self.__erro_interno_evt.invoke(stacktrace)
             # 2. Evento funcional amigável (mensagem para a View)
             self.mensagem_falha_geracao(f"Erro ao gerar gráfico: {str(e)}")
+            self.logger.log_erro(f"gerar_grafico() - Erro inesperado: {str(e)}")
         finally:
             # Garante que fecha qualquer figura temporária se houve erro
             if self.__figura is None:
@@ -357,27 +372,31 @@ class Model:
     
 
     def gravar_grafico(self, caminho: str) -> None:
-       """
-       Grava a figura do gráfico previamente gerada.
-       """
-       self.mensagem_estado_processamento("Início da gravação do gráfico")       
+        """
+        Grava a figura do gráfico previamente gerada.
+        """
+        self.mensagem_estado_processamento("Início da gravação do gráfico")
+        self.logger.log_info(f"gravar_grafico() - A gravar gráfico em: {caminho}")
 
-       try:
-           if self.__figura is None:
-            self.mensagem_falha_gravacao("Nenhum gráfico foi gerado.")
-            return
-       
-           self.__figura.savefig(caminho)
-           self.mensagem_grafico_gravado()
-           self.mensagem_estado_processamento("Gravação concluída")
-       except Exception as e:
+        try:
+            if self.__figura is None:
+                self.mensagem_falha_gravacao("Nenhum gráfico foi gerado.")
+                self.logger.log_erro("gravar_grafico() - Nenhum gráfico foi gerado")
+                return
+
+            self.__figura.savefig(caminho)
+            self.mensagem_grafico_gravado()
+            self.mensagem_estado_processamento("Gravação concluída")
+            self.logger.log_info("gravar_grafico() - Gravação concluída com sucesso")
+        except Exception as e:
             stacktrace = traceback.format_exc()
 
             # 1. Evento técnico (equivalente ao throw ex no C#)
             self.__erro_interno_evt.invoke(stacktrace)
-            # 2. Evento funcional amigável (mensagem para a View)           
+            # 2. Evento funcional amigável (mensagem para a View)
             self.mensagem_falha_gravacao(f"Erro ao gravar gráfico: {str(e)}")
-       finally:
-           # Garante limpeza de recursos mesmo em caso de erro
-           plt.close(self.__figura)
-           self.__figura = None
+            self.logger.log_erro(f"gravar_grafico() - Erro inesperado: {str(e)}")
+        finally:
+            # Garante limpeza de recursos mesmo em caso de erro
+            plt.close(self.__figura)
+            self.__figura = None

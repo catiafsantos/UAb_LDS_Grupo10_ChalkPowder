@@ -3,7 +3,8 @@ from typing import Callable
 from graficos.controllerEvent import ControllerEvent
 from graficos.IUserView import IUserView
 from graficos.model import Model
-
+from graficos.controllerConsoleLogger import ControllerConsoleLogger
+from graficos.ILogger import ILogger
 
 class MostraDlgCarregarFicheiroEvt(ControllerEvent):
     """Evento emitido pelo Controller para informar a View que deve obter do user 
@@ -44,9 +45,16 @@ class GravaGraficoEvt(ControllerEvent):
 
 class Controller:
     def __init__(self, View: Callable[[], IUserView]) -> None:
-        self.view = View()
+        
+        #Instanciar o logger do Consoller
+        self.logger: ILogger = ControllerConsoleLogger()
+
+        # Instanciar a View e o seu Logger
+        self.view = View(self.logger)
         view = self.view
-        self.model = model = Model(view)
+
+        # Instanciar o Model, com logger injetado
+        self.model = model = Model(view, self.logger)
 
         # Definição de eventos do Controller
         self.__mostra_dlg_carregar_ficheiro_evt: MostraDlgCarregarFicheiroEvt = MostraDlgCarregarFicheiroEvt()
@@ -70,8 +78,11 @@ class Controller:
 
     def run(self):
         try:
+            self.logger.log_info("A iniciar a interface gráfica...")
             self.view.ativar_interface()
+            self.logger.log_info("Interface encerrada com sucesso.")
         except Exception as e:
+            self.logger.log_erro(f"Falha crítica ao iniciar a interface: {str(e)}")
             print("Biblioteca de interface indisponível, falha crítica.")
             print(f"Contacte o suporte: erro {e}")
 
@@ -86,17 +97,23 @@ class Controller:
     def user_selecionou_grafico(self, tipo: str):
         self.tipo_grafico = tipo
         colunas = self.model.get_colunas_disponiveis()
+        self.logger.log_info(f"user_selecionou_grafico() - Tipo de gráfico selecionado: {tipo}")
         self.view.mostra_formulario_parametros(colunas)
+        self.logger.log_info(f"user_selecionou_grafico() - Colunas disponíveis: {colunas}")
 
     def user_submeteu_parametros(self, x: str, y: str, x_label: str, y_label: str):
+        self.logger.log_info(f"user_submeteu_parametros() - Parâmetros submetidos: x={x}, y={y}, x_label='{x_label}', y_label='{y_label}'")
         self.model.gerar_grafico(self.tipo_grafico, x, y, x_label, y_label)
 
     def user_solicitou_gravacao(self):
         """User selecionou opção de gravar gráfico"""
         # Notifica a View para mostrar formulário (diálogo) de gravação
         self.__mostra_dlg_grava_grafico_evt.invoke()
+        self.logger.log_info("mostra_dlg_grava_grafico_evt - Utilizador solicitou guardar o gráfico")
 
     def user_grava_grafico(self, caminho: str):
         """User grava gráfico."""
         # Notifica Model para gravar gráfico com a fullpath especificada
         self.__grava_grafico_evt.invoke(caminho)
+        self.logger.log_info(f"grava_grafico_evt - Utilizador indicou caminho de gravação: {caminho}")
+

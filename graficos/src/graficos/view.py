@@ -4,6 +4,7 @@ from tkinter import messagebox
 
 from graficos.IUserView import IUserView
 from graficos.controllerEvent import ControllerEvent
+from graficos.ILogger import ILogger
 from graficos.guiview import (
     construir_interface_principal, construir_formulario_parametros,
     obter_parametros_formulario, carregar_ficheiro_csv_com_dialogo,
@@ -76,8 +77,9 @@ class ErroInternoEvt(ControllerEvent):
 
 
 class View(tk.Tk, IUserView):
-    def __init__(self) -> None:
+    def __init__(self, logger: ILogger) -> None:
         super().__init__()
+        self.logger = logger 
         # Eventos expostos pela view
         self.__importar_ficheiro_click_evt: ImportarFicheiroClickEvt = ImportarFicheiroClickEvt()
         self.__ficheiro_selecionado_evt: FicheiroSelecionadoClickEvt = FicheiroSelecionadoClickEvt()
@@ -138,14 +140,17 @@ class View(tk.Tk, IUserView):
 
         # Mensagem inicial
         self.mostra_mensagem_info("Pronto para iniciar.")
+        self.logger.log_info("ativar_interface() - Interface gráfica iniciada.")
         self.mainloop()
 
     # Métodos auxiliares da interface
     def mostra_erro_importacao(self, mensagem: str):
         messagebox.showerror("Erro de Importação", mensagem)
+        self.logger.log_erro(f"mostra_erro_importacao() - {mensagem}")
 
     def mostra_erro_ficheiro(self, mensagem: str):
         messagebox.showwarning("Ficheiro Inválido", mensagem)
+        self.logger.log_erro(f"mostra_erro_ficheiro() - {mensagem}")
 
     def mostra_mensagem_info(self, mensagem: str):
         self.estado_var.set(mensagem)
@@ -160,6 +165,7 @@ class View(tk.Tk, IUserView):
     # Callbacks de Ações do utilizador
     def __on_importar_ficheiro_click(self):
         # Método que informa o Controller que o utilizador clicou no botão "Importar Ficheiro"
+        self.logger.log_info("on_importar_ficheiro_click() - Botão 'Importar Ficheiro' clicado.")
         self.importar_ficheiro_click_evt.invoke()
 
     def __on_grafico_selecionado(self, *args):
@@ -169,14 +175,17 @@ class View(tk.Tk, IUserView):
         if grafico != "Escolha um gráfico":
             self.__grafico_selecionado_click_evt.invoke(grafico)
             self.mostra_mensagem_info(f"Gráfico selecionado: {grafico}")
+            self.logger.log_info(f"on_grafico_selecionado() - Gráfico selecionado: {grafico}")
 
     def __on_guardar_grafico_click(self):
         # Método que informa o Controller que o utilizador clicou no botão "Guardar gráfico"
         self.__solicita_guardar_grafico_click_evt.invoke()
+        self.logger.log_info("on_guardar_grafico_click() - Botão 'Guardar Gráfico' clicado.")
 
     def __on_submeter_parametros(self):
         # Método que informa o Controller que os parâmetros do formulário foram preenchidos
         self.mostra_mensagem_info("A validar os parâmetros...")
+        self.logger.log_info("on_submeter_parametros() - Validação de parâmetros iniciada.")
         self.update_idletasks()
 
         # Obtém os parâmetros preenchidos no formulário
@@ -188,9 +197,11 @@ class View(tk.Tk, IUserView):
         if erro:
             self.mostra_erro_ficheiro(erro)
             self.mostra_mensagem_info(erro)
+            self.logger.log_erro(f"on_submeter_parametros() - Erro na validação: {erro}")
             return
                 
         self.mostra_mensagem_info("Parâmetros corretos. A gerar gráfico...")
+        self.logger.log_info(f"on_submeter_parametros() - Parâmetros validados: x={x_col}, y={y_col}, x_label={x_label}, y_label={y_label}")
         self.__submissao_parametros_evt.invoke(x_col, y_col, x_label, y_label)
 
     def __on_home_click(self):
@@ -209,6 +220,7 @@ class View(tk.Tk, IUserView):
 
         # Verifica se um caminho foi retornado pelo diálogo
         if path:
+            self.logger.log_info(f"mostra_dlg_carregar_ficheiro() - Ficheiro selecionado: {path}") 
             self.notifica_ficheiro_selecionado(path)
 
     # Método que mostra ao utilizador as opções de gravação do ficheiro
@@ -248,9 +260,11 @@ class View(tk.Tk, IUserView):
     # Método para mostrar o gráfico
     def mostrar_grafico(self, __: List[str] = []) -> None:
         preparar_interface_grafico(self, self.__on_guardar_grafico_click)
+        self.logger.log_info("mostrar_grafico() - Interface de gráfico exibida.")
 
     # Método que permite voltar ao menu inicial
     def voltar_menu_inicial(self) -> None:
         voltar_menu_inicial_interface(self)
 
         self.mostra_mensagem_info("Pronto para importar um novo ficheiro.")
+        self.logger.log_info("voltar_menu_inicial() - Retornado ao menu principal.")
