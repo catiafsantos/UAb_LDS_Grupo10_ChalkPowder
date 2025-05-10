@@ -25,22 +25,29 @@ machine:~/.../graficos$ python run.py
 Listagem de directorias:
 ```sh
 UAb_LDS_Grupo10_ChalkPowder/
-├── Diagramas/
+├── Diagramas
 │   (diagramas de componentes e sequências do projeto)
 │
-├── FicheirosTeste/
+├── FicheirosTeste
 │   (ficheiros de teste para a aplicação)
 │
-├── README.md
-│
-├── graficos/
-│   ├── pyproject.toml
+├── graficos
+│   ├── src
+│   │   └── graficos
+│   │       ├── controller
+│   │       │   ├── controllerConsoleLogger.py
+│   │       │   ├── controllerEvent.py
+│   │       │   ├── controller.py
+│   │       │   └── __init__.py
+│   │       ├── guiview.py
+│   │       ├── ILogger.py
+│   │       ├── __init__.py
+│   │       ├── IUserView.py
+│   │       ├── model.py
+│   │       └── view.py
 │   ├── run.py
+│   ├── README.md
+│   ├── pyproject.toml
 │   ├── uv.lock
-│   └── src/
-│       └── graficos/
-│           ├── controller.py
-│           ├── eventos.py
-│           ├── model.py
-│           └── view.py
+└── README.md
 ```
