@@ -1,4 +1,4 @@
-from graficos.controller.controller import Controller
+from graficos.controller import Controller
 from graficos.view import View
 
 

@@ -3,8 +3,8 @@ import tkinter as tk
 from tkinter import messagebox
 
 from graficos.IUserView import IUserView
-from graficos.controller import ControllerEvent
-from graficos.controller import ILogger
+from graficos.controller.controllerEvent import ControllerEvent
+from graficos.controller.ILogger import ILogger
 from graficos.guiview import (
     construir_interface_principal, construir_formulario_parametros,
     obter_parametros_formulario, carregar_ficheiro_csv_com_dialogo,

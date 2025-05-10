@@ -1,7 +1,7 @@
 from typing import List, Dict, Any, Callable, Optional
-from graficos.controller import ControllerEvent
+from graficos.controller.controllerEvent import ControllerEvent
+from graficos.controller.ILogger import ILogger
 from graficos.IUserView import IUserView
-from graficos.controller import ILogger
 
 import pandas as pd
 import seaborn as sns
