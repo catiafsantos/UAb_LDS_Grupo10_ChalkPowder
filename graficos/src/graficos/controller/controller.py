@@ -3,7 +3,7 @@ from typing import Callable
 from .controllerEvent import ControllerEvent
 from .controllerConsoleLogger import ControllerConsoleLogger
 from .ILogger import ILogger
-from graficos.IUserView import IUserView
+from graficos.view.IUserView import IUserView
 from graficos.model import Model
 
 
