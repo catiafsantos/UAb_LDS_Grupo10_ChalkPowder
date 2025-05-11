@@ -2,10 +2,10 @@ from typing import Callable, List
 import tkinter as tk
 from tkinter import messagebox
 
-from graficos.IUserView import IUserView
+from .IUserView import IUserView
 from graficos.controller.controllerEvent import ControllerEvent
 from graficos.controller.ILogger import ILogger
-from graficos.guiview import (
+from .guiview import (
     construir_interface_principal, construir_formulario_parametros,
     obter_parametros_formulario, carregar_ficheiro_csv_com_dialogo,
     guardar_grafico_com_dialogo, preparar_interface_grafico,
