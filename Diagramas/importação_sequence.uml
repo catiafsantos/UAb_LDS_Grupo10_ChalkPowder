@@ -46,6 +46,16 @@ alt Processamento falhou
         deactivate View
     end
 
+    group Ficheiro excede tamanho permitido
+        Model -> Model : throw new EventoFicheiroInvalido("Excede o tamanho máximo de 10 MB")
+        Model --> View: Notifica falha de importação
+        activate View
+        View --> User: Mensagem de falha de importação
+        activate User
+        deactivate User
+        deactivate View
+    end
+
     group Exceção inesperada ao importar
         Model -> Model : throw new EventoFalhaImportacao("Erro genérico")
         Model --> View: Notifica falha de importação 
