@@ -1,0 +1,110 @@
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36" version="26.2.14">
+  <diagram id="F91A1OO__TX7qwGNxHpP" name="Página-1">
+    <mxGraphModel dx="2178" dy="721" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="yaWDwcZ-snGtrZXKxPBy-16" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.75;exitDx=0;exitDy=0;entryX=0.25;entryY=0;entryDx=0;entryDy=0;dashed=1;dashPattern=8 8;" parent="1" source="2" target="4" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="2" value="Views" style="rounded=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=24;" parent="1" vertex="1">
+          <mxGeometry x="324" y="200" width="180" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="yaWDwcZ-snGtrZXKxPBy-14" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.75;exitY=0;exitDx=0;exitDy=0;entryX=0;entryY=0.75;entryDx=0;entryDy=0;dashed=1;dashPattern=8 8;" parent="1" source="3" target="2" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="3" value="Model" style="rounded=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=24;" parent="1" vertex="1">
+          <mxGeometry x="-10" y="490" width="180" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="4" value="Controller" style="rounded=1;fillColor=#ADD8E6;fontSize=24;" parent="1" vertex="1">
+          <mxGeometry x="670" y="490" width="180" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="9" style="startArrow=none;startFill=0;exitX=0;exitY=0.5;exitDx=0;exitDy=0;" parent="1" source="4" target="3" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="494" y="570" as="sourcePoint" />
+            <mxPoint x="334" y="570" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="fxzbogEJTyI74loV-5Jj-10" value="" style="endArrow=classic;html=1;rounded=0;strokeWidth=3;dashed=1;" parent="1" edge="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="400" y="120" as="sourcePoint" />
+            <mxPoint x="369" y="200" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="fxzbogEJTyI74loV-5Jj-11" value="INPUT" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" parent="1" vertex="1">
+          <mxGeometry x="320" y="140" width="60" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="fxzbogEJTyI74loV-5Jj-12" value="" style="endArrow=classic;html=1;rounded=0;strokeWidth=3;exitX=0.75;exitY=0;exitDx=0;exitDy=0;dashed=1;" parent="1" source="2" edge="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="414" y="320" as="sourcePoint" />
+            <mxPoint x="430" y="120" as="targetPoint" />
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="fxzbogEJTyI74loV-5Jj-13" value="OUTPUT" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" parent="1" vertex="1">
+          <mxGeometry x="450" y="140" width="70" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="fxzbogEJTyI74loV-5Jj-17" value="Utilizador" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;" parent="1" vertex="1">
+          <mxGeometry x="404" y="50" width="20" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="fxzbogEJTyI74loV-5Jj-20" value="Ativar interface&#xa;Mostra carregar ficheiro&#xa;Mostra formulário de campos&#xa;Mostra formulário de gravação&#xa;" style="text;overflow=hidden;rounded=0;" parent="1" vertex="1">
+          <mxGeometry x="820" y="340" width="190" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="yaWDwcZ-snGtrZXKxPBy-10" value="" style="endArrow=classic;html=1;rounded=0;exitX=0.75;exitY=0;exitDx=0;exitDy=0;entryX=1;entryY=0.25;entryDx=0;entryDy=0;" parent="1" source="4" target="2" edge="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="560" y="420" as="sourcePoint" />
+            <mxPoint x="674" y="310" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="805" y="310" />
+              <mxPoint x="805" y="230" />
+              <mxPoint x="740" y="230" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="yaWDwcZ-snGtrZXKxPBy-11" value="" style="endArrow=none;html=1;rounded=0;exitX=0.25;exitY=0;exitDx=0;exitDy=0;entryX=0;entryY=0.25;entryDx=0;entryDy=0;startArrow=block;startFill=1;endFill=1;" parent="1" source="3" target="2" edge="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="201" y="410" as="sourcePoint" />
+            <mxPoint x="70" y="230" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="35" y="230" />
+              <mxPoint x="201" y="230" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="yaWDwcZ-snGtrZXKxPBy-12" value="Notifica ficheiro inválido&#xa;Notifica estado do processamento&#xa;Lista de gráficos&#xa;Notifica gráfico disponível&#xa;Notifica gráfico gravado" style="text;overflow=hidden;rounded=0;" parent="1" vertex="1">
+          <mxGeometry x="130" y="360" width="200" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="yaWDwcZ-snGtrZXKxPBy-13" value="Importar ficheiro&#xa;Gerar Dados&#xa;Gravar Gráfico" style="text;overflow=hidden;rounded=0;" parent="1" vertex="1">
+          <mxGeometry x="350" y="550" width="100" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="yaWDwcZ-snGtrZXKxPBy-17" value="Notificação de seleção de ficheiro&#xa;Notificação sobre ficheiro selecionado&#xa;Notificação de gráfico seleccionado&#xa;Notificação de novos parâmetros&#xa;Notificação de solicitação de gravação" style="text;overflow=hidden;rounded=0;" parent="1" vertex="1">
+          <mxGeometry x="504" y="360" width="206" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="yaWDwcZ-snGtrZXKxPBy-20" value="&#xa;Interface de seleção de ficheiro&#xa;Mensagem de falha de importação&#xa;Mensagem de erro de processamento&#xa;Mostra importação bem sucedida e opções de gráficos disponíveis&#xa;Mostra formulário de campos&#xa;Mostra gráfico&#xa;Mostra formulário de gravação&#xa;Mensagem de resultado&#xa;" style="text;overflow=hidden;rounded=0;" parent="1" vertex="1">
+          <mxGeometry x="521" y="60" width="379" height="140" as="geometry" />
+        </mxCell>
+        <mxCell id="yaWDwcZ-snGtrZXKxPBy-21" value="Seleciona &quot;Importar Ficheiro&quot;&#xa;Seleciona ficheiro a importar&#xa;Escolhe tipo de gráfico&#xa;Preenche e submete formulário&#xa;Seleciona opção de gravar gráfico&#xa;Preenche e submete dados para gravação" style="text;overflow=hidden;rounded=0;" parent="1" vertex="1">
+          <mxGeometry x="90" y="70" width="241" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="yaWDwcZ-snGtrZXKxPBy-23" value="" style="endArrow=classic;html=1;rounded=0;strokeWidth=3;entryX=1;entryY=0.5;entryDx=0;entryDy=0;dashed=1;" parent="1" target="4" edge="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="960" y="550" as="sourcePoint" />
+            <mxPoint x="920" y="540" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="910" y="550" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="yaWDwcZ-snGtrZXKxPBy-24" value="INPUT" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" parent="1" vertex="1">
+          <mxGeometry x="880" y="520" width="60" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="yaWDwcZ-snGtrZXKxPBy-26" value="&lt;h1 style=&quot;margin-top: 0px;&quot;&gt;&lt;span style=&quot;font-size: 12px; font-weight: 400;&quot;&gt;Iniciar Programa&lt;/span&gt;&lt;/h1&gt;" style="text;html=1;whiteSpace=wrap;overflow=hidden;rounded=0;" parent="1" vertex="1">
+          <mxGeometry x="870" y="560" width="110" height="45" as="geometry" />
+        </mxCell>
+        <mxCell id="yaWDwcZ-snGtrZXKxPBy-28" value="Solicita lista de gráficos" style="text;overflow=hidden;rounded=0;" parent="1" vertex="1">
+          <mxGeometry x="-100" y="340" width="200" height="120" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

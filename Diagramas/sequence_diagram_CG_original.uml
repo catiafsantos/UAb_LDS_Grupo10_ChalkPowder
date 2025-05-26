@@ -1,0 +1,125 @@
+@startuml
+
+actor User
+participant View
+participant Controller
+participant Model
+
+== Inicialização do Programa ==
+/'O passo abaixo existe apenas para que os pipes fiquem correctos'/
+User-[hidden]->User 
+activate User
+User -> Controller : Iniciar Programa()
+deactivate User
+activate Controller
+Controller -> View : Ativar Interface()
+deactivate Controller
+activate View
+    View -> View : Disponibilizar UI (Janelas e Opções)
+/'O passo abaixo existe apenas para que os pipes fiquem correctos'/
+    View-[hidden]->View 
+deactivate View
+
+== Importação de Dados ==
+User -> View : Seleciona “Importar Ficheiro"
+activate User
+activate View
+View -> Controller : Notifica que utilizador selecionou importar ficheiro
+activate Controller
+Controller -> View : Mostra Carregar Ficheiro()
+View --> User: Interface de seleção de ficheiro
+User -> View: Seleciona ficheiro
+deactivate User
+View -> Controller : Notifica ficheiro selecionado
+deactivate View
+Controller -> Model : Importar ficheiro()
+deactivate Controller 
+activate Model
+Model -> Model: Validar ficheiro() 
+alt Ficheiro inválido 
+Model -> View: Notifica ficheiro inválido
+activate View
+View --> User: Mensagem de falha de importação
+activate User
+deactivate User
+deactivate View
+else Ficheiro válido
+Model -> Model : Importar dados ()
+Model -> View : Notifica estado do processamento
+activate View
+deactivate Controller
+alt Processamento falhou
+View --> User: Mensagem de erro de processamento
+activate User
+deactivate User
+else Processamento foi bem sucedido
+View -> Model : Solicita lista de gráficos disponíveis
+Model --> View: Lista de gráficos 
+deactivate Model
+View --> User: Mostra importação bem sucedida e opções de gráficos disponíveis
+deactivate View
+activate User
+/'O passo abaixo existe apenas para que os pipes fiquem correctos'/
+    User-[hidden]->User
+deactivate User 
+end
+end
+
+
+== Criação e customização do gráfico ==
+User -> View : Escolhe tipo de gráfico
+activate User
+activate View
+View -> Controller : Gráfico selecionado
+activate Controller
+Controller --> View: Mostra formulário de campos
+deactivate Controller
+View --> User: Mostra formulário
+User -> View: Preenche dados e submete
+deactivate User
+View -> Controller : Notifica novos parâmetros
+deactivate View
+activate Controller
+Controller -> Model : Gerar dados ()
+deactivate Controller
+activate Model
+Model -> Model : Processar dados ()
+Model -> Model : Gerar gráfico ()
+Model -> View : Notifica gráfico disponível
+deactivate Model
+activate View
+View -> User : Mostra gráfico
+deactivate View
+activate User
+/'O passo abaixo existe apenas para que os pipes fiquem correctos'/
+    User-[hidden]->User 
+deactivate User
+
+== Gravação de Gráfico ==
+User -> View : Seleciona opção de gravar "Guardar Gráfico" 
+activate User
+View -> Controller : Notifica solicitação de gravação
+activate View
+activate Controller
+Controller --> View : Mostra formulário de gravação
+View --> User : Mostra formulário de gravação
+deactivate Controller
+User -> View : Preenche e submete 
+deactivate User
+View -> Controller : Notifica solicitação de gravação
+deactivate View
+activate Controller
+Controller -> Model : Gravar gráfico ()
+deactivate Controller
+activate Model
+Model -> Model: Gravar gráfico ()
+Model -> View : Notifica gráfico gravado
+deactivate Model
+activate View
+View --> User : Mensagem de resultado 
+deactivate View
+activate User
+/'O passo abaixo existe apenas para que os pipes fiquem correctos'/
+    User-[hidden]->User 
+deactivate User
+@enduml
